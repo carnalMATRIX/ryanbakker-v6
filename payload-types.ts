@@ -265,8 +265,22 @@ export interface Project {
   };
   projectDetails?: {
     featuredImage?: (number | null) | Media;
-    subtitle?: string | null;
     description?: string | null;
+    overview?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
   };
   externalLinks?:
     | {
@@ -527,8 +541,8 @@ export interface ProjectsSelect<T extends boolean = true> {
     | T
     | {
         featuredImage?: T;
-        subtitle?: T;
         description?: T;
+        overview?: T;
       };
   externalLinks?:
     | T

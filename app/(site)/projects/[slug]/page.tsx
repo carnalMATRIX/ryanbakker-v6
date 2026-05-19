@@ -188,8 +188,8 @@ export default async function ProjectSinglePage({ params }: PageProps) {
                     hasArticle ? "md:col-span-2 order-1" : "col-span-1",
                   )}
                 >
-                  <h3>Objective</h3>
-                  <p>{project.projectDetails?.subtitle}</p>
+                  <h3>Description</h3>
+                  <p>{project.projectDetails?.description}</p>
                 </div>
 
                 <div
@@ -255,8 +255,11 @@ export default async function ProjectSinglePage({ params }: PageProps) {
                     hasArticle && "order-4",
                   )}
                 >
-                  <h3>Description</h3>
-                  <p>{project.projectDetails?.description}</p>
+                  <h3>Overview</h3>
+                  <RichText
+                    data={project.projectDetails?.overview as any}
+                    converters={jsxConverters}
+                  />
                 </div>
 
                 <div

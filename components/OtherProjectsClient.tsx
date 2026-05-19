@@ -93,7 +93,7 @@ export function OtherProjectsClient({
               </h5>
 
               <p className="text-xs opacity-80 leading-tight pt-1.5 line-clamp-1">
-                {project.projectDetails?.subtitle}
+                {project.projectDetails?.description}
               </p>
 
               {renderTags(

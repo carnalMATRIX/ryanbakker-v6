@@ -10,7 +10,8 @@ export interface Project {
     isHighlighted?: boolean | null;
   };
   projectDetails?: {
-    subtitle?: string | null;
+    description?: string | null;
+    overview?: any | null;
     featuredImage?:
       | string
       | number
@@ -136,7 +137,7 @@ function ProjectSection({
                           {project.title}
                         </h5>
                         <p className="hidden md:block text-sm text-transparent group-hover:text-neutral-300 transition-colors duration-500 line-clamp-1 pr-2">
-                          {project.projectDetails?.subtitle}
+                          {project.projectDetails?.description}
                         </p>
                       </div>
                     </Link>

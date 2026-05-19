@@ -105,7 +105,7 @@ async function ProjectsGrid({ activeTags }: ProjectsGridProps) {
                         {featuredProject.title}
                       </h2>
                       <p className="text-sm opacity-80 font-light">
-                        {featuredProject.projectDetails?.subtitle}
+                        {featuredProject.projectDetails?.description}
                       </p>
                     </div>
 
@@ -161,7 +161,7 @@ async function ProjectsGrid({ activeTags }: ProjectsGridProps) {
                       {project.title}
                     </h3>
                     <p className="text-sm opacity-80 font-light pt-2.5">
-                      {project.projectDetails?.subtitle}
+                      {project.projectDetails?.description}
                     </p>
 
                     {renderTags(project.tags as { label: string }[])}
