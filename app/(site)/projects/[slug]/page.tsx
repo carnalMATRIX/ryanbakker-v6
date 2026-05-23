@@ -12,9 +12,88 @@ import { jsxConverters } from "@/lib/RichTextConverters";
 import Footer from "@/components/Footer";
 import { ShareButton } from "@/components/ShareButton";
 import { VantaBackground } from "@/components/VentaBackground";
+import type { Metadata } from "next";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const payload = await getPayload({ config });
+
+  const { docs: projects } = (await payload.find({
+    collection: "projects",
+    where: {
+      "projectBehaviour.slug": {
+        equals: slug,
+      },
+    },
+    limit: 1,
+  })) as unknown as { docs: Project[] };
+
+  if (!projects.length) {
+    return {};
+  }
+
+  const project = projects[0];
+  const title = `${project.title} | Ryan Bakker`;
+  const description = project.projectDetails?.description || "";
+  const hasArticle = !!project.projectArticle;
+
+  const featuredImage = project.projectDetails?.featuredImage;
+  const ogImages = [];
+
+  if (featuredImage && typeof featuredImage !== "number") {
+    ogImages.push({
+      url: featuredImage.url || "",
+      width: featuredImage.width || 1200,
+      height: featuredImage.height || 630,
+      alt: featuredImage.alt || project.title,
+    });
+  } else if (project.images && project.images.length > 0) {
+    const firstImage = project.images[0].image;
+    if (typeof firstImage !== "number") {
+      ogImages.push({
+        url: firstImage.url || "",
+        width: firstImage.width || 1200,
+        height: firstImage.height || 630,
+        alt: firstImage.alt || project.title,
+      });
+    }
+  }
+
+  const siteUrl = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3000";
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `${siteUrl}/projects/${slug}`,
+      siteName: "Ryan Bakker",
+      images: ogImages,
+      type: hasArticle ? "article" : "website",
+      ...(hasArticle
+        ? {
+            publishedTime: project.createdAt,
+            modifiedTime: project.updatedAt,
+            authors: ["Ryan Bakker"],
+            section: "Projects",
+            tags: project.tags?.map((t) => t.label).filter(Boolean) as string[],
+          }
+        : {}),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ogImages.map((img) => img.url),
+    },
+  };
 }
 
 export default async function ProjectSinglePage({ params }: PageProps) {
@@ -37,6 +116,7 @@ export default async function ProjectSinglePage({ params }: PageProps) {
 
   const project = projects[0];
   const hasArticle = !!project.projectArticle;
+  const hasImages = !!project.images?.length;
 
   return (
     <>
@@ -171,13 +251,13 @@ export default async function ProjectSinglePage({ params }: PageProps) {
             <div
               className={cn(
                 "max-w-5xl mx-auto z-50 relative text-white flex flex-col gap-10 w-full px-6 md:px-0",
-                hasArticle ? "items-start" : "md:flex-row md:items-center",
+                !hasImages ? "items-start" : "md:flex-row md:items-center",
               )}
             >
               <div
                 className={cn(
                   "grid grid-cols-1 w-full gap-x-6 gap-y-8",
-                  hasArticle
+                  !hasImages
                     ? "md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 max-w-full"
                     : "md:grid-cols-2 md:max-w-[50%]",
                 )}
@@ -185,7 +265,7 @@ export default async function ProjectSinglePage({ params }: PageProps) {
                 <div
                   className={cn(
                     "project-single-cell",
-                    hasArticle ? "md:col-span-2 order-1" : "col-span-1",
+                    !hasImages ? "md:col-span-2 order-1" : "col-span-1",
                   )}
                 >
                   <h3>Description</h3>
@@ -195,7 +275,7 @@ export default async function ProjectSinglePage({ params }: PageProps) {
                 <div
                   className={cn(
                     "project-single-cell col-span-1",
-                    hasArticle && "order-5",
+                    !hasImages && "order-5",
                   )}
                 >
                   <h3>Tags</h3>
@@ -214,7 +294,7 @@ export default async function ProjectSinglePage({ params }: PageProps) {
                 <div
                   className={cn(
                     "project-single-cell col-span-1",
-                    hasArticle && "order-2",
+                    !hasImages && "order-2",
                   )}
                 >
                   <h3>Technologies</h3>
@@ -230,7 +310,7 @@ export default async function ProjectSinglePage({ params }: PageProps) {
                 <div
                   className={cn(
                     "project-single-cell col-span-1",
-                    hasArticle && "order-3",
+                    !hasImages && "order-3",
                   )}
                 >
                   <h3>External Links</h3>
@@ -252,7 +332,7 @@ export default async function ProjectSinglePage({ params }: PageProps) {
                 <div
                   className={cn(
                     "project-single-cell col-span-1 md:col-span-2",
-                    hasArticle && "order-4",
+                    !hasImages && "order-4",
                   )}
                 >
                   <h3>Overview</h3>
@@ -265,19 +345,20 @@ export default async function ProjectSinglePage({ params }: PageProps) {
                 <div
                   className={cn(
                     "project-single-cell col-span-1",
-                    hasArticle && "order-6",
+                    !hasImages && "order-6",
                   )}
                 />
               </div>
 
-              <div
-                className={cn(
-                  "w-full h-full flex items-center justify-center",
-                  hasArticle ? "max-w-full" : "max-w-full md:max-w-[50%]",
-                )}
-              >
-                <ProjectGallery images={project.images} />
-              </div>
+              {hasImages && (
+                <div
+                  className={cn(
+                    "w-full h-full flex items-center justify-center max-w-full md:max-w-[50%]",
+                  )}
+                >
+                  <ProjectGallery images={project.images} />
+                </div>
+              )}
             </div>
           </div>
 

@@ -5,6 +5,7 @@ import { HomeContent } from "./collections/HomeContent.ts";
 import { Media } from "./collections/Media.ts";
 import { Projects } from "./collections/Projects.ts";
 import { ProjectsContent } from "./collections/ProjectsContent.ts";
+import { Users } from "./collections/Users.ts";
 import { nodemailerAdapter } from "@payloadcms/email-nodemailer";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
 import { vercelBlobStorage } from "@payloadcms/storage-vercel-blob";
@@ -15,7 +16,7 @@ export default buildConfig({
   editor: lexicalEditor(),
 
   // Define and configure your collections in this array
-  collections: [HomeContent, Projects, ProjectsContent, Media],
+  collections: [HomeContent, Projects, ProjectsContent, Media, Users],
 
   // Your Payload secret - should be a complex and secure string, unguessable
   secret: process.env.PAYLOAD_SECRET || "",
