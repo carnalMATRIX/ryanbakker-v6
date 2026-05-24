@@ -93,29 +93,35 @@ async function ProjectsGrid({ activeTags }: ProjectsGridProps) {
                   className="overflow-hidden group h-full min-h-110"
                 >
                   {getFeaturedImageUrl(featuredProject) && (
-                    <Image
-                      src={getFeaturedImageUrl(featuredProject)}
-                      alt={featuredProject.title}
-                      fill
-                      objectPosition="top"
-                      className="object-cover rounded-3xl max-h-[75%] md:max-h-[75%] shadow-xl"
-                    />
+                    <>
+                      <Image
+                        src={getFeaturedImageUrl(featuredProject)}
+                        alt={featuredProject.title}
+                        width={800}
+                        height={600}
+                        className="block md:hidden object-cover rounded-3xl w-full h-auto shadow-xl"
+                      />
+                      <Image
+                        src={getFeaturedImageUrl(featuredProject)}
+                        alt={featuredProject.title}
+                        fill
+                        objectPosition="top"
+                        className="object-cover rounded-3xl max-h-[60%] md:max-h-[75%] shadow-xl hidden md:block"
+                      />
+                    </>
                   )}
 
-                  <div className="relative flex flex-row justify-between items-end h-full z-10 pb-1.5">
+                  <div className="relative flex flex-col md:flex-row justify-between items-start md:items-end md:h-full z-10 pb-1.5">
                     <div className="w-full">
                       <h2 className="text-2xl font-bold leading-7 tracking-[-4%] line-clamp-3 pt-2">
                         {featuredProject.title}
                       </h2>
-                      {/* <p className="text-sm opacity-80 font-light">
-                        {featuredProject.projectDetails?.description}
-                      </p> */}
                     </div>
 
-                    <div className="flex justify-end">
+                    <div className="flex justify-start md:justify-end w-full md:w-auto">
                       {renderTags(
                         featuredProject.tags as { label: string }[],
-                        "flex-wrap-reverse items-end justify-end",
+                        "flex-wrap md:flex-wrap-reverse items-start md:items-end justify-start md:justify-end",
                       )}
                     </div>
                   </div>
