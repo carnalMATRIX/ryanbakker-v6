@@ -63,7 +63,7 @@ export function ProjectGallery({ images }: ProjectGalleryProps) {
       <div className="flex flex-col gap-4 w-full">
         {/* Main Image Container - Added cursor-zoom-in and onClick handler */}
         <div
-          className="relative aspect-video lg:aspect-square w-full overflow-hidden rounded-3xl border border-white/10 shadow-2xl bg-neutral-800/50 max-h-[400px] md:max-h-[500px] lg:max-h-125 cursor-zoom-in group"
+          className="relative aspect-video lg:aspect-square w-full overflow-hidden rounded-3xl border border-white/10 shadow-2xl bg-neutral-800/50 max-h-100 md:max-h-125 lg:max-h-125 cursor-zoom-in group"
           onClick={() => setIsLightboxOpen(true)}
         >
           {imageUrl && (
@@ -71,7 +71,7 @@ export function ProjectGallery({ images }: ProjectGalleryProps) {
               src={imageUrl}
               alt={altText}
               fill
-              className="object-cover md:object-contain lg:object-cover p-2 rounded-4xl transition-transform duration-500 group-hover:scale-[1.02]"
+              className="object-cover md:object-contain lg:object-cover py-2 rounded-4xl transition-transform duration-500 group-hover:scale-[1.02]"
               priority
             />
           )}

@@ -122,15 +122,16 @@ export default async function ProjectSinglePage({ params }: PageProps) {
     <>
       <main className="relative w-full min-h-screen bg-neutral-900 overflow-x-hidden">
         {/* Ambient background glow to add depth to the top of the page */}
-        <div 
-          className="absolute top-0 left-0 w-full h-[1200px] pointer-events-none -z-0"
+        <div
+          className="absolute top-0 left-0 w-full h-300 pointer-events-none z-0"
           style={{
-            background: "radial-gradient(circle at 50% -20%, rgba(67, 56, 202, 0.25) 0%, rgba(124, 58, 237, 0.15) 40%, transparent 80%)"
+            background:
+              "radial-gradient(circle at 50% -20%, rgba(67, 56, 202, 0.25) 0%, rgba(124, 58, 237, 0.15) 40%, transparent 80%)",
           }}
         />
 
-        <section className="mt-8 md:mt-20 z-50 relative px-4 md:px-0">
-          <div className="max-w-6xl mx-auto flex flex-col items-start gap-10 px-6 md:px-8 lg:px-0">
+        <section className="mt-8 md:mt-20 z-50 relative px-2 md:px-0">
+          <div className="max-w-6xl mx-auto flex flex-col items-start gap-10 px-2 md:px-8 lg:px-0">
             <Link href="/projects" passHref>
               <Button
                 variant="refined-outline"
@@ -156,7 +157,7 @@ export default async function ProjectSinglePage({ params }: PageProps) {
             </div>
           </div>
 
-          <div className="max-w-7xl mx-auto mt-4 pt-8 md:pt-12 pb-12 md:pb-18 relative mb-4 px-4 md:px-8 lg:px-0">
+          <div className="max-w-7xl mx-auto mt-4 pt-8 md:pt-12 pb-12 md:pb-18 relative mb-4 px-0 md:px-8 lg:px-0">
             {/* Background elements container that defines the bounds of the purple card */}
             <div className="absolute left-1 md:left-3.75 top-1 md:top-2.5 right-1 md:right-6.25 bottom-1 md:bottom-7.5 pointer-events-none overflow-hidden rounded-[24px] md:rounded-[40px]">
               <VantaBackground
@@ -268,7 +269,7 @@ export default async function ProjectSinglePage({ params }: PageProps) {
 
             <div
               className={cn(
-                "max-w-6xl mx-auto z-50 relative text-white flex flex-col lg:flex-row lg:items-center gap-10 w-full px-6 md:px-8 lg:px-0",
+                "max-w-6xl mx-auto z-50 relative text-white flex flex-col lg:flex-row lg:items-center gap-10 w-full px-4 md:px-8 lg:px-0",
                 !hasImages && "items-start",
               )}
             >
@@ -382,7 +383,7 @@ export default async function ProjectSinglePage({ params }: PageProps) {
           </div>
 
           {hasArticle && project.projectArticle && (
-            <article className="max-w-3xl mx-auto px-6 md:px-8 lg:px-0 text-white mb-16 mt-10">
+            <article className="max-w-3xl mx-auto px-3 md:px-8 lg:px-0 text-white mb-16 mt-10">
               <div className="flex items-center justify-between max-w-5xl mx-auto">
                 <h3 className="text-3xl! font-bold tracking-tight">Article</h3>
                 <ShareButton />
