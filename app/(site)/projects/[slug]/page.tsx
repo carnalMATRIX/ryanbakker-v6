@@ -143,7 +143,7 @@ export default async function ProjectSinglePage({ params }: PageProps) {
             </Link>
 
             <div className="flex flex-col gap-2 w-full">
-              <h1 className="text-white font-extrabold text-3xl md:text-[45px] leading-tight tracking-tighter md:leading-12 uppercase line-clamp-4 w-full">
+              <h1 className="text-white font-extrabold text-3xl md:text-[45px] leading-tight tracking-tighter md:leading-12 uppercase line-clamp-6 w-full">
                 {project.title}
               </h1>
               <p className="text-xs text-neutral-400 font-medium uppercase tracking-wider">
