@@ -39,11 +39,7 @@ export default async function Home() {
     },
   });
 
-  console.log("Fetched Projects:", projects);
-
   const data = homeContent.docs[0];
-  console.log("Found Home Content ID:", data?.id);
-  console.log("Total Home Content Docs:", homeContent.totalDocs);
 
   return (
     <main className="w-full">

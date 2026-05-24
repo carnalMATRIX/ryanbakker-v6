@@ -11,6 +11,8 @@ import {
   ThreeColumnBlock as ThreeColumnBlockType,
 } from "@/payload-types";
 
+import { ArticleImage } from "@/components/ArticleImage";
+
 const SubBlockRenderer = ({ block }: { block: any }) => {
   switch (block.blockType) {
     case "text-block":
@@ -26,22 +28,12 @@ const SubBlockRenderer = ({ block }: { block: any }) => {
       const nativeHeight = media.height || 1000;
 
       return (
-        <div className="my-4 group w-full">
-          <div className="w-full">
-            <Image
-              src={media.url}
-              alt={media.alt || ""}
-              width={nativeWidth}
-              height={nativeHeight}
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              // w-full h-auto forces it to fill the column track and auto-scale height
-              className="w-full h-auto block rounded-lg object-cover"
-            />
-          </div>
-          <p className="text-xs font-light italic text-neutral-400 mt-1.5 transition-colors duration-300 group-hover:text-white">
-            {media.alt || "Project image"}
-          </p>
-        </div>
+        <ArticleImage
+          src={media.url}
+          alt={media.alt || ""}
+          width={nativeWidth}
+          height={nativeHeight}
+        />
       );
     }
     case "quote-block":
@@ -94,7 +86,7 @@ export const jsxConverters: JSXConverters = {
     "two-column": ({ node }: { node: any }) => {
       const { leftColumn, rightColumn } = node.fields;
       return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 my-0">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-12 my-0">
           <div className="flex flex-col gap-4">
             {leftColumn?.map((block: any, i: number) => (
               <SubBlockRenderer key={i} block={block} />
@@ -164,20 +156,14 @@ export const jsxConverters: JSXConverters = {
 
     if (media.mimeType?.startsWith("image/")) {
       return (
-        <div className="my-1 group">
-          <div className="relative w-fit flex flex-col mx-auto items-center">
-            <Image
-              src={media.url}
-              alt={media.alt || ""}
-              width={1600}
-              height={1000}
-              className="object-contain block relative max-w-[768]"
-            />
-            <p className="relative text-xs mr-auto font-light italic text-neutral-400 z-50 left-0 mt-1.5 transition-colors duration-300 group-hover:text-white">
-              {media.alt || "Project image"}
-            </p>
-          </div>
-        </div>
+        <ArticleImage
+          src={media.url}
+          alt={media.alt || ""}
+          width={1600}
+          height={1000}
+          className="max-w-[768px] mx-auto"
+          captionClassName="max-w-[768px] mx-auto"
+        />
       );
     }
     return null;

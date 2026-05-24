@@ -63,7 +63,7 @@ export function ProjectGallery({ images }: ProjectGalleryProps) {
       <div className="flex flex-col gap-4 w-full">
         {/* Main Image Container - Added cursor-zoom-in and onClick handler */}
         <div
-          className="relative aspect-square w-full overflow-hidden rounded-3xl border border-white/10 shadow-2xl bg-neutral-800/50 max-h-125 cursor-zoom-in group"
+          className="relative aspect-video lg:aspect-square w-full overflow-hidden rounded-3xl border border-white/10 shadow-2xl bg-neutral-800/50 max-h-[400px] md:max-h-[500px] lg:max-h-125 cursor-zoom-in group"
           onClick={() => setIsLightboxOpen(true)}
         >
           {imageUrl && (
@@ -71,7 +71,7 @@ export function ProjectGallery({ images }: ProjectGalleryProps) {
               src={imageUrl}
               alt={altText}
               fill
-              className="object-cover p-2 rounded-4xl transition-transform duration-500 group-hover:scale-[1.02]"
+              className="object-cover md:object-contain lg:object-cover p-2 rounded-4xl transition-transform duration-500 group-hover:scale-[1.02]"
               priority
             />
           )}
@@ -107,13 +107,13 @@ export function ProjectGallery({ images }: ProjectGalleryProps) {
       {/* Fullscreen Lightbox Overlay */}
       {isLightboxOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-4 md:p-12 animate-in fade-in duration-300"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 md:p-12 animate-in fade-in duration-300"
           onClick={() => setIsLightboxOpen(false)} // Clicking the background closes it
         >
           {/* Close Button */}
           <button
             onClick={() => setIsLightboxOpen(false)}
-            className="absolute top-6 right-6 z-60 p-3 rounded-full bg-white/10 text-white hover:bg-white/25 transition-colors hover:cursor-pointer"
+            className="absolute top-6 right-6 z-[110] p-3 rounded-full bg-white/20 backdrop-blur-md border border-white/20 text-white hover:bg-white/30 shadow-xl transition-all hover:cursor-pointer"
             aria-label="Close fullscreen image"
           >
             <X size={24} />

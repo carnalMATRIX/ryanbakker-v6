@@ -81,8 +81,6 @@ function ProjectSection({
                 // 3. Ensure the slug exists for the link
                 const link = `/projects/${project.projectBehaviour?.slug || "#"}`;
 
-                console.log("Project: ", project);
-
                 return (
                   <li
                     key={project.projectBehaviour?.slug || index}

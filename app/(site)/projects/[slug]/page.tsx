@@ -121,8 +121,16 @@ export default async function ProjectSinglePage({ params }: PageProps) {
   return (
     <>
       <main className="relative w-full min-h-screen bg-neutral-900 overflow-x-hidden">
+        {/* Ambient background glow to add depth to the top of the page */}
+        <div 
+          className="absolute top-0 left-0 w-full h-[1200px] pointer-events-none -z-0"
+          style={{
+            background: "radial-gradient(circle at 50% -20%, rgba(67, 56, 202, 0.25) 0%, rgba(124, 58, 237, 0.15) 40%, transparent 80%)"
+          }}
+        />
+
         <section className="mt-8 md:mt-20 z-50 relative px-4 md:px-0">
-          <div className="max-w-5xl mx-auto flex flex-col items-start gap-10">
+          <div className="max-w-6xl mx-auto flex flex-col items-start gap-10 px-6 md:px-8 lg:px-0">
             <Link href="/projects" passHref>
               <Button
                 variant="refined-outline"
@@ -134,7 +142,7 @@ export default async function ProjectSinglePage({ params }: PageProps) {
             </Link>
 
             <div className="flex flex-col gap-2 w-full">
-              <h1 className="text-white font-extrabold text-3xl md:text-[45px] leading-tight tracking-tighter md:leading-12 uppercase line-clamp-2 w-full">
+              <h1 className="text-white font-extrabold text-3xl md:text-[45px] leading-tight tracking-tighter md:leading-12 uppercase line-clamp-4 w-full">
                 {project.title}
               </h1>
               <p className="text-xs text-neutral-400 font-medium uppercase tracking-wider">
@@ -148,20 +156,20 @@ export default async function ProjectSinglePage({ params }: PageProps) {
             </div>
           </div>
 
-          <div className="max-w-6xl mx-auto mt-4 pt-8 md:pt-12 pb-12 md:pb-18 relative mb-4">
+          <div className="max-w-7xl mx-auto mt-4 pt-8 md:pt-12 pb-12 md:pb-18 relative mb-4 px-4 md:px-8 lg:px-0">
             {/* Background elements container that defines the bounds of the purple card */}
-            <div className="absolute left-1 md:left-3.75 top-1 md:top-2.5 right-1 md:right-6.25 bottom-1 md:bottom-7.5 pointer-events-none">
+            <div className="absolute left-1 md:left-3.75 top-1 md:top-2.5 right-1 md:right-6.25 bottom-1 md:bottom-7.5 pointer-events-none overflow-hidden rounded-[24px] md:rounded-[40px]">
               <VantaBackground
-                foreground="#14224C"
+                foreground="#312e81"
                 background="#0A0C24"
-                className="absolute -top-90 bottom-1/2 left-1/2 -translate-x-1/2 w-screen -z-10 drop-shadow-xl"
+                className="absolute inset-0 -z-10"
               />
 
               <div
                 className="absolute inset-0 z-30 rounded-[24px] md:rounded-[40px]"
                 style={{
                   background:
-                    "linear-gradient(205deg, #D78EFF 0%, rgba(179, 122, 240, 0.8) 3.84%, rgba(37, 50, 104, 0.8) 33.65%, #290046 72.11%)",
+                    "linear-gradient(205deg, rgba(215, 142, 255, 0.5) 0%, rgba(179, 122, 240, 0.4) 3.84%, rgba(37, 50, 104, 0.4) 33.65%, rgba(41, 0, 70, 0.6) 72.11%)",
                   filter: "url(#project-bg-filter)",
                 }}
               />
@@ -260,8 +268,8 @@ export default async function ProjectSinglePage({ params }: PageProps) {
 
             <div
               className={cn(
-                "max-w-5xl mx-auto z-50 relative text-white flex flex-col gap-10 w-full px-6 md:px-0",
-                !hasImages ? "items-start" : "md:flex-row md:items-center",
+                "max-w-6xl mx-auto z-50 relative text-white flex flex-col lg:flex-row lg:items-center gap-10 w-full px-6 md:px-8 lg:px-0",
+                !hasImages && "items-start",
               )}
             >
               <div
@@ -269,7 +277,7 @@ export default async function ProjectSinglePage({ params }: PageProps) {
                   "grid grid-cols-1 w-full gap-x-6 gap-y-8",
                   !hasImages
                     ? "md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 max-w-full"
-                    : "md:grid-cols-2 md:max-w-[50%]",
+                    : "lg:grid-cols-2 max-w-full lg:max-w-[40%]",
                 )}
               >
                 <div
@@ -347,6 +355,7 @@ export default async function ProjectSinglePage({ params }: PageProps) {
                 >
                   <h3>Overview</h3>
                   <RichText
+                    className="project-overview-content text-sm md:text-xs"
                     data={project.projectDetails?.overview as any}
                     converters={jsxConverters}
                   />
@@ -363,7 +372,7 @@ export default async function ProjectSinglePage({ params }: PageProps) {
               {hasImages && (
                 <div
                   className={cn(
-                    "w-full h-full flex items-center justify-center max-w-full md:max-w-[50%]",
+                    "w-full h-full flex items-center justify-center max-w-full lg:max-w-[60%]",
                   )}
                 >
                   <ProjectGallery images={project.images} />
@@ -373,16 +382,16 @@ export default async function ProjectSinglePage({ params }: PageProps) {
           </div>
 
           {hasArticle && project.projectArticle && (
-            <article className="max-w-3xl mx-auto px-6 md:px-0 text-white article-content mb-16">
+            <article className="max-w-3xl mx-auto px-6 md:px-8 lg:px-0 text-white mb-16 mt-10">
               <div className="flex items-center justify-between max-w-5xl mx-auto">
-                <h3 className="text-3xl!">Article</h3>
+                <h3 className="text-3xl! font-bold tracking-tight">Article</h3>
                 <ShareButton />
               </div>
-              <hr className="border-neutral-800 -mt-8 mb-10" />
+              <hr className="border-neutral-800 mt-4" />
 
-              <div className="max-w-5xl mx-auto">
+              <div className="max-w-5xl mx-auto article-content">
                 <RichText
-                  className="project-article hyphens-manual!"
+                  className="project-article"
                   data={project.projectArticle}
                   converters={jsxConverters}
                 />

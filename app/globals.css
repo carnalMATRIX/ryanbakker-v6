@@ -207,67 +207,102 @@
     @apply w-full text-xs;
   }
 
+  .project-overview-content p {
+    @apply pb-5;
+  }
+
   .project-single-cell h3 {
     @apply font-bold text-[20px] tracking-[-5%] uppercase pb-1.5;
   }
 
   .article-content {
-    @apply space-y-6 leading-relaxed text-lg text-neutral-300;
+    @apply space-y-8 leading-relaxed text-base md:text-[18px] lg:text-sm text-zinc-300! selection:bg-purple-500/30;
   }
 
-  .article-content h1, .article-content h2, .article-content h3 {
-    @apply text-white font-bold uppercase tracking-tight;
+  .article-content h1, 
+  .article-content h2, 
+  .article-content h3 {
+    @apply text-zinc-100 font-bold uppercase tracking-tight;
   }
 
-  .article-content h1 { @apply text-4xl mt-12 mb-6; }
-  .article-content h2 { @apply text-3xl mt-10 mb-5; }
-  .article-content h3 { @apply text-2xl mt-8 mb-4; }
+  .article-content h4, 
+  .article-content h5, 
+  .article-content h6 {
+    @apply text-zinc-300 font-semibold uppercase tracking-wide;
+  }
 
-  .article-content p { @apply mb-4; }
+  .article-content h1 { 
+    @apply text-4xl mt-16 mb-8 text-slate-100; 
+  }
+  .article-content h2 { 
+    @apply text-3xl mt-12 mb-6 text-slate-200; 
+  }
+  .article-content h3 { 
+    @apply text-2xl mt-10 mb-5 text-indigo-100 text-left; 
+  }
+  .article-content h4 { 
+    @apply text-xl mt-8 mb-4 text-slate-300 text-left; 
+  }
+  .article-content h5 { 
+    @apply text-lg mt-6 mb-3 text-indigo-400/80 text-left; 
+  }
+  .article-content h6 { 
+    @apply text-base mt-4 mb-2 text-slate-500 text-left; 
+  }
+
+  .article-content p { 
+    @apply mb-6; 
+  }
 
   .article-content a {
-    @apply text-purple-400 underline hover:text-purple-300 transition-colors;
+    @apply text-purple-400 underline decoration-purple-400/30 underline-offset-4 hover:text-purple-300 hover:decoration-purple-300 transition-all;
   }
 
-  .article-content ul { @apply list-disc list-outside ml-6 space-y-2; }
-  .article-content ol { @apply list-decimal list-outside ml-6 space-y-2; }
+  .article-content ul { 
+    @apply list-disc list-outside ml-6 space-y-3 marker:text-purple-500/60; 
+  }
+  
+  .article-content ol { 
+    @apply list-decimal list-outside ml-6 space-y-3 marker:text-purple-500/60 marker:font-bold; 
+  }
 
-  .article-content img {
-    @apply rounded-none!;
+  .article-content blockquote {
+    @apply relative py-6 px-6 md:pl-10 my-10 md:my-12 border-l-4 border-purple-600/60 bg-purple-950/20 rounded-r-2xl italic text-zinc-300 md:mx-8;
+  }
+
+  @media (max-width: 767px) {
+    .article-content p,
+    .article-content ul,
+    .article-content ol,
+    .article-content blockquote {
+      hyphens: auto;
+      overflow-wrap: break-word;
+      hyphenate-limit-chars: 6 3 3;
+      hyphenate-limit-lines: 2;
+      -webkit-hyphenate-limit-chars: 6 3 3;
+      -webkit-hyphenate-limit-lines: 2;
+    }
+  }
+
+  .article-content .image-wrapper {
+    @apply w-full h-auto my-14 md:my-10;
+  }
+
+  /* Tighten spacing for images inside multi-column blocks */
+  .article-content [class*="grid"] .image-wrapper {
+    @apply my-4 md:my-6;
+  }
+
+  .article-content .image-wrapper img {
+    @apply w-full h-auto rounded-xl border border-white/5 shadow-2xl shadow-indigo-500/15 transition-all duration-500;
+  }
+
+  .article-content .image-wrapper:hover img {
+    @apply shadow-indigo-500/30 border-white/10;
   }
 
   .project-article {
-    @apply text-sm text-white text-justify;
+    @apply text-inherit text-justify;
   }
-
-  .project-article h4 {
-    font-size: 1.7rem;
-    font-weight: 600;
-    font-kerning: normal;
-    padding-top: 15px !important;
-    padding-bottom: 10px !important;
-
-  }
-
-  .project-article h5 {
-    font-size: 1.2rem;
-    font-weight: 600;
-    font-kerning: normal;
-    padding-top: 20px !important;
-    padding-bottom: 10px !important;
-  }
-
-  .project-article h6 {
-    font-size: 1rem;
-    font-weight: 700;
-    font-kerning: normal;
-    padding-top: 10px !important;
-    padding-bottom: 5px !important;
-  }
-
-  .project-article blockquote {
-    @apply border-l border-indigo-500 pl-4 italic text-indigo-300! md:mx-10! md:my-8!;
-  }
-  
 
 }

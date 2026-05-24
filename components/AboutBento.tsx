@@ -4,8 +4,6 @@ import { getMediaUrl } from "@/lib/utils";
 function AboutBento({ data }: { data?: any }) {
   const bentoData = data.data;
 
-  console.log(bentoData.aboutDeveloperImage);
-
   return (
     <div className="section-child w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 lg:grid-rows-12 grid-flow-row-dense text-black gap-2 z-50">
       {/* 3. About Me Header */}
