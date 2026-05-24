@@ -7,34 +7,39 @@ import { cn } from "@/lib/utils";
 declare global {
   interface Window {
     VANTA: any;
+    p5: any;
   }
 }
 
 interface VantaBackgroundProps {
   children?: React.ReactNode;
   className?: string;
-  // Added color props that accept standard hex strings
   foreground?: string;
   background?: string;
 }
 
-// Helper to convert standard CSS hex ("#ff0000") to Vanta's required number format (0xff0000)
 const hexToNumber = (hex: string) => parseInt(hex.replace("#", "0x"), 16);
 
 export function VantaBackground({
   children,
   className,
-  // Set your default colors here so it doesn't break if you forget to pass the props
   foreground = "#2d7cb6",
   background = "#03132d",
 }: VantaBackgroundProps) {
   const vantaRef = useRef<HTMLDivElement>(null);
-  const [vantaEffect, setVantaEffect] = useState<any>(null);
+  const vantaEffectRef = useRef<any>(null);
+  const [p5Loaded, setP5Loaded] = useState(() => typeof window !== "undefined" && !!window.p5);
 
   const initVanta = () => {
-    if (!vantaEffect && window.VANTA && vantaRef.current) {
-      setVantaEffect(
-        window.VANTA.TOPOLOGY({
+    if (
+      !vantaEffectRef.current &&
+      window.VANTA &&
+      window.VANTA.TOPOLOGY &&
+      vantaRef.current &&
+      window.p5
+    ) {
+      try {
+        vantaEffectRef.current = window.VANTA.TOPOLOGY({
           el: vantaRef.current,
           mouseControls: true,
           touchControls: true,
@@ -43,41 +48,58 @@ export function VantaBackground({
           minWidth: 200.0,
           scale: 1.0,
           scaleMobile: 1.0,
-          // Apply the parsed colors
           color: hexToNumber(foreground),
           backgroundColor: hexToNumber(background),
-        }),
-      );
+        });
+      } catch (error) {
+        console.error("Vanta Init error", error);
+      }
     }
   };
 
-  // 1. Destroy Vanta on unmount
+  // Clean up on unmount
   useEffect(() => {
     return () => {
-      if (vantaEffect) {
-        vantaEffect.destroy();
+      if (vantaEffectRef.current) {
+        vantaEffectRef.current.destroy();
+        vantaEffectRef.current = null;
       }
     };
-  }, [vantaEffect]);
+  }, []);
 
-  // 2. Dynamically update colors if the props change without reloading the canvas
+  // Update colors if props change
   useEffect(() => {
-    if (vantaEffect) {
-      vantaEffect.setOptions({
+    if (vantaEffectRef.current) {
+      vantaEffectRef.current.setOptions({
         color: hexToNumber(foreground),
         backgroundColor: hexToNumber(background),
       });
     }
-  }, [foreground, background, vantaEffect]);
+  }, [foreground, background]);
+
+  // Handle re-initialization if needed (e.g., after scripts load)
+  useEffect(() => {
+    if (p5Loaded && window.VANTA && window.VANTA.TOPOLOGY) {
+      initVanta();
+    }
+  }, [p5Loaded]);
 
   return (
     <>
-      <Script src="/scripts/p5.min.js" strategy="afterInteractive" />
       <Script
-        src="/scripts/vanta.topology.min.js"
+        id="p5-bundle"
+        src="/scripts/p5.min.js"
         strategy="afterInteractive"
-        onLoad={initVanta}
+        onLoad={() => setP5Loaded(true)}
       />
+      {p5Loaded && (
+        <Script
+          id="vanta-topology-bundle"
+          src="/scripts/vanta.topology.min.js"
+          strategy="afterInteractive"
+          onLoad={initVanta}
+        />
+      )}
 
       <div
         ref={vantaRef}
