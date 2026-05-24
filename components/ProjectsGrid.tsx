@@ -88,25 +88,28 @@ async function ProjectsGrid({ activeTags }: ProjectsGridProps) {
                 // 2. Hardcoded 0ms delay so it loads instantly
                 style={{ animationDelay: "0ms", animationFillMode: "both" }}
               >
-                <GridCard className="overflow-hidden group h-full min-h-100">
+                <GridCard
+                  isFeatured={true}
+                  className="overflow-hidden group h-full min-h-110"
+                >
                   {getFeaturedImageUrl(featuredProject) && (
                     <Image
                       src={getFeaturedImageUrl(featuredProject)}
                       alt={featuredProject.title}
                       fill
                       objectPosition="top"
-                      className="object-cover rounded-3xl max-h-[75%] md:max-h-[80%] shadow-xl"
+                      className="object-cover rounded-3xl max-h-[75%] md:max-h-[75%] shadow-xl"
                     />
                   )}
 
                   <div className="relative flex flex-row justify-between items-end h-full z-10 pb-1.5">
                     <div className="w-full">
-                      <h2 className="text-2xl font-bold leading-6 tracking-[-4%] line-clamp-2">
+                      <h2 className="text-2xl font-bold leading-7 tracking-[-4%] line-clamp-3 pt-2">
                         {featuredProject.title}
                       </h2>
-                      <p className="text-sm opacity-80 font-light">
+                      {/* <p className="text-sm opacity-80 font-light">
                         {featuredProject.projectDetails?.description}
-                      </p>
+                      </p> */}
                     </div>
 
                     <div className="flex justify-end">

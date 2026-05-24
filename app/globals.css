@@ -239,4 +239,35 @@
   .project-article {
     @apply text-sm text-white text-justify;
   }
+
+  .project-article h4 {
+    font-size: 1.7rem;
+    font-weight: 600;
+    font-kerning: normal;
+    padding-top: 15px !important;
+    padding-bottom: 10px !important;
+
+  }
+
+  .project-article h5 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    font-kerning: normal;
+    padding-top: 20px !important;
+    padding-bottom: 10px !important;
+  }
+
+  .project-article h6 {
+    font-size: 1rem;
+    font-weight: 700;
+    font-kerning: normal;
+    padding-top: 10px !important;
+    padding-bottom: 5px !important;
+  }
+
+  .project-article blockquote {
+    @apply border-l border-indigo-500 pl-4 italic text-indigo-300! md:mx-10! md:my-8!;
+  }
+  
+
 }

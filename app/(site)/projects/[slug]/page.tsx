@@ -373,7 +373,7 @@ export default async function ProjectSinglePage({ params }: PageProps) {
           </div>
 
           {hasArticle && project.projectArticle && (
-            <article className="max-w-6xl mx-auto px-6 md:px-0 text-white article-content mb-16">
+            <article className="max-w-3xl mx-auto px-6 md:px-0 text-white article-content mb-16">
               <div className="flex items-center justify-between max-w-5xl mx-auto">
                 <h3 className="text-3xl!">Article</h3>
                 <ShareButton />

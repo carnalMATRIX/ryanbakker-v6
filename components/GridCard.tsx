@@ -7,6 +7,7 @@ interface GridCardProps {
   children?: React.ReactNode;
   className?: string;
   variant?: "large" | "small";
+  isFeatured?: boolean;
 }
 
 /**
@@ -17,6 +18,7 @@ interface GridCardProps {
 export function GridCard({
   children,
   className,
+  isFeatured = false,
   variant = "large",
 }: GridCardProps) {
   const filterId = useId().replace(/:/g, "");
@@ -135,7 +137,11 @@ export function GridCard({
       />
 
       {/* Content Container */}
-      <div className="relative z-10 w-full h-full">{children}</div>
+      <div
+        className={`relative z-10 w-full h-full ${isFeatured && "flex flex-col gap-2"}`}
+      >
+        {children}
+      </div>
     </div>
   );
 }

@@ -20,19 +20,27 @@ const SubBlockRenderer = ({ block }: { block: any }) => {
     case "image-block": {
       const media = block.image;
       if (!media || typeof media === "number" || !media.url) return null;
+
+      // Extract or fallback to native dimensions so the browser knows the aspect ratio
+      const nativeWidth = media.width || 1600;
+      const nativeHeight = media.height || 1000;
+
       return (
-        <div className="my-1 group">
-          <div className="relative w-full aspect-video">
+        <div className="my-4 group w-full">
+          <div className="w-full">
             <Image
               src={media.url}
               alt={media.alt || ""}
-              fill
-              className="object-cover"
+              width={nativeWidth}
+              height={nativeHeight}
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              // w-full h-auto forces it to fill the column track and auto-scale height
+              className="w-full h-auto block rounded-lg object-cover"
             />
-            <p className="text-xs font-light italic text-neutral-400 -bottom-9 absolute pt-10 z-50 left-2 transition-colors duration-300 group-hover:text-white">
-              {media.alt || "Project image"}
-            </p>
           </div>
+          <p className="text-xs font-light italic text-neutral-400 mt-1.5 transition-colors duration-300 group-hover:text-white">
+            {media.alt || "Project image"}
+          </p>
         </div>
       );
     }
@@ -86,7 +94,7 @@ export const jsxConverters: JSXConverters = {
     "two-column": ({ node }: { node: any }) => {
       const { leftColumn, rightColumn } = node.fields;
       return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 my-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 my-0">
           <div className="flex flex-col gap-4">
             {leftColumn?.map((block: any, i: number) => (
               <SubBlockRenderer key={i} block={block} />
@@ -103,7 +111,7 @@ export const jsxConverters: JSXConverters = {
     "three-column": ({ node }: { node: any }) => {
       const { leftColumn, centerColumn, rightColumn } = node.fields;
       return (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 my-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 my-0">
           <div className="flex flex-col gap-4">
             {leftColumn?.map((block: any, i: number) => (
               <SubBlockRenderer key={i} block={block} />
@@ -157,14 +165,15 @@ export const jsxConverters: JSXConverters = {
     if (media.mimeType?.startsWith("image/")) {
       return (
         <div className="my-1 group">
-          <div className="relative w-full aspect-video">
+          <div className="relative w-fit flex flex-col mx-auto items-center">
             <Image
               src={media.url}
               alt={media.alt || ""}
-              fill
-              className="object-cover"
+              width={1600}
+              height={1000}
+              className="object-contain block relative max-w-[768]"
             />
-            <p className="text-xs italic text-neutral-500 mb-2 transition-colors duration-300 group-hover:text-white">
+            <p className="relative text-xs mr-auto font-light italic text-neutral-400 z-50 left-0 mt-1.5 transition-colors duration-300 group-hover:text-white">
               {media.alt || "Project image"}
             </p>
           </div>
