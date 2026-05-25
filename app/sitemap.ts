@@ -3,7 +3,7 @@ import { MetadataRoute } from 'next'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const payload = await getCachedPayload()
-  const siteUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://ryanbakker.com'
+  const siteUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://ryanbakker.vercel.app'
 
   // Fetch all projects to generate dynamic paths
   const { docs: projects } = await payload.find({
