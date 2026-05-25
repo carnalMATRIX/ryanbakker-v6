@@ -12,6 +12,7 @@ import Footer from "@/components/Footer";
 import { ShareButton } from "@/components/ShareButton";
 import { VantaBackground } from "@/components/VentaBackground";
 import type { Metadata } from "next";
+import JsonLd from "@/components/JsonLd";
 
 export const revalidate = 3600; // revalidate every hour
 
@@ -79,11 +80,14 @@ export async function generateMetadata({
     }
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3000";
+  const siteUrl = process.env.NEXT_PUBLIC_SERVER_URL || "https://ryanbakker.vercel.app";
 
   return {
     title,
     description,
+    alternates: {
+      canonical: `${siteUrl}/projects/${slug}`,
+    },
     openGraph: {
       title,
       description,
@@ -131,9 +135,34 @@ export default async function ProjectSinglePage({ params }: PageProps) {
   const project = projects[0];
   const hasArticle = !!project.projectArticle;
   const hasImages = !!project.images?.length;
+  const siteUrl = process.env.NEXT_PUBLIC_SERVER_URL || "https://ryanbakker.vercel.app";
+
+  const projectSchema = {
+    "@context": "https://schema.org",
+    "@type": hasArticle ? "Article" : "CreativeWork",
+    name: project.title,
+    description: project.projectDetails?.description,
+    url: `${siteUrl}/projects/${slug}`,
+    datePublished: project.createdAt,
+    dateModified: project.updatedAt,
+    author: {
+      "@type": "Person",
+      name: "Ryan Bakker",
+    },
+    ...(hasArticle
+      ? {
+          headline: project.title,
+          mainEntityOfPage: {
+            "@type": "WebPage",
+            "@id": `${siteUrl}/projects/${slug}`,
+          },
+        }
+      : {}),
+  };
 
   return (
     <>
+      <JsonLd data={projectSchema} />
       <main className="relative w-full min-h-screen bg-neutral-900 overflow-x-hidden">
         {/* Ambient background glow to add depth to the top of the page */}
         <div

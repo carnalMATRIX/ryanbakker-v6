@@ -88,7 +88,7 @@ function SocialGallery({ socialCards }: { socialCards?: SocialCard[] | null }) {
                 </h5>
 
                 <Link
-                  href={githubCard?.link || "https://github.com/ryanbakker"}
+                  href={githubCard?.link || "https://github.com/carnalMATRIX"}
                   target="_blank"
                   className="ml-auto w-full md:w-auto"
                 >

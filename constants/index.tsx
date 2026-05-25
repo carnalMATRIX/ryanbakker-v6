@@ -350,7 +350,7 @@ export function GitHubStackIcon(props: SVGProps<SVGSVGElement>) {
 /** Update `href` values to your real profile URLs. */
 export const socialLinks: SocialLink[] = [
   {
-    href: "https://github.com/ryanbakker",
+    href: "https://github.com/carnalMATRIX",
     label: "GitHub",
     Icon: GitHubIcon,
   },
@@ -373,7 +373,7 @@ export const socialLinks: SocialLink[] = [
 
 export const HERO_SOCIAL_LINKS = [
   {
-    href: "https://github.com/ryanbakker",
+    href: "https://github.com/carnalMATRIX",
     label: "GitHub",
     Icon: GitHubIcon,
   },

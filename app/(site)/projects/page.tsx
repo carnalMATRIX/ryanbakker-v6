@@ -6,8 +6,17 @@ import { getCachedPayload } from "@/lib/payload";
 import { ProjectFilters } from "@/components/ProjectFilters";
 import { DotPattern } from "@/components/DotPattern"; // Make sure your import path matches
 import Footer from "@/components/Footer";
+import type { Metadata } from "next";
 
 export const revalidate = 3600; // revalidate every hour
+
+export const metadata: Metadata = {
+  title: "Project Archive",
+  description: "Browse through a collection of projects by Ryan Bakker, ranging from web development to photography and digital art.",
+  alternates: {
+    canonical: "/projects",
+  },
+};
 
 async function ProjectsPage({
   searchParams,

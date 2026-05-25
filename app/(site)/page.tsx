@@ -9,8 +9,19 @@ import HomeClient from "./HomeClient";
 import { getCachedPayload } from "@/lib/payload";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import { SocialCard } from "@/components/SocialGallery";
+import type { Metadata } from "next";
+import JsonLd from "@/components/JsonLd";
 
 export const revalidate = 3600; // revalidate every hour
+
+export const metadata: Metadata = {
+  title: "Home | Full Stack Developer & Digital Artist",
+  description:
+    "Ryan Bakker: AUT Software Development & AI student blending technical logic with visual design. Specializing in Next.js, web architecture, and human-AI interaction.",
+  alternates: {
+    canonical: "/",
+  },
+};
 
 export default async function Home() {
   const payload = await getCachedPayload();
@@ -41,11 +52,35 @@ export default async function Home() {
   });
 
   const data = homeContent.docs[0];
+  const siteUrl = process.env.NEXT_PUBLIC_SERVER_URL || "https://ryanbakker.vercel.app";
+
+  const personSchema = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: "Ryan Bakker",
+    url: siteUrl,
+    jobTitle: "Full Stack Developer & Digital Artist",
+    sameAs: [
+      "https://github.com/carnalMATRIX",
+      "https://linkedin.com/in/ryan-bakker",
+      "https://www.instagram.com/rm_bakker/",
+    ],
+    description: "Ryan Bakker is a Full Stack Developer and Digital Artist specializing in building modern web applications.",
+  };
+
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Ryan Bakker Portfolio",
+    url: siteUrl,
+  };
 
   return (
     <main className="w-full">
+      <JsonLd data={personSchema} />
+      <JsonLd data={websiteSchema} />
       <HomeClient data={data} />
-
+...
       <ProjectSection projects={projects.docs} />
 
       <EducationSection
