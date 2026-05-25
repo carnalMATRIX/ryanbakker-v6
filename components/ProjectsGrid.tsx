@@ -1,5 +1,4 @@
-import { getPayload } from "payload";
-import config from "@payload-config";
+import { getCachedPayload } from "@/lib/payload";
 import { GridCard } from "./GridCard";
 import Image from "next/image";
 import Link from "next/link";
@@ -12,7 +11,7 @@ interface ProjectsGridProps {
 }
 
 async function ProjectsGrid({ activeTags }: ProjectsGridProps) {
-  const payload = await getPayload({ config });
+  const payload = await getCachedPayload();
   const { docs: projects } = await payload.find({
     collection: "projects",
     depth: 2,

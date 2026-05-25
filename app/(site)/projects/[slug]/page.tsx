@@ -1,5 +1,4 @@
-import { getPayload } from "payload";
-import config from "@payload-config";
+import { getCachedPayload } from "@/lib/payload";
 import { notFound } from "next/navigation";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import Link from "next/link";
@@ -14,6 +13,21 @@ import { ShareButton } from "@/components/ShareButton";
 import { VantaBackground } from "@/components/VentaBackground";
 import type { Metadata } from "next";
 
+export const revalidate = 3600; // revalidate every hour
+
+export async function generateStaticParams() {
+  const payload = await getCachedPayload();
+  const { docs: projects } = await payload.find({
+    collection: "projects",
+    depth: 0,
+    limit: 1000,
+  });
+
+  return projects.map((project) => ({
+    slug: (project as any).projectBehaviour?.slug,
+  }));
+}
+
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
@@ -22,7 +36,7 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const payload = await getPayload({ config });
+  const payload = await getCachedPayload();
 
   const { docs: projects } = (await payload.find({
     collection: "projects",
@@ -98,7 +112,7 @@ export async function generateMetadata({
 
 export default async function ProjectSinglePage({ params }: PageProps) {
   const { slug } = await params;
-  const payload = await getPayload({ config });
+  const payload = await getCachedPayload();
 
   const { docs: projects } = (await payload.find({
     collection: "projects",

@@ -6,13 +6,14 @@ import ProjectSection, {
 } from "@/components/ProjectSection";
 import SocialSection from "@/components/SocialSection";
 import HomeClient from "./HomeClient";
-import { getPayload } from "payload";
-import config from "@payload-config";
+import { getCachedPayload } from "@/lib/payload";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import { SocialCard } from "@/components/SocialGallery";
 
+export const revalidate = 3600; // revalidate every hour
+
 export default async function Home() {
-  const payload = await getPayload({ config });
+  const payload = await getCachedPayload();
   const homeContent = await payload.find({
     collection: "home-content",
     limit: 1,

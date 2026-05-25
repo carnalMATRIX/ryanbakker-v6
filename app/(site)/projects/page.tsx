@@ -2,11 +2,12 @@ import ProjectsGrid from "@/components/ProjectsGrid";
 import { Button } from "@/components/ui/button";
 import { Undo2 } from "lucide-react";
 import Link from "next/link";
-import { getPayload } from "payload";
-import config from "@payload-config";
+import { getCachedPayload } from "@/lib/payload";
 import { ProjectFilters } from "@/components/ProjectFilters";
 import { DotPattern } from "@/components/DotPattern"; // Make sure your import path matches
 import Footer from "@/components/Footer";
+
+export const revalidate = 3600; // revalidate every hour
 
 async function ProjectsPage({
   searchParams,
@@ -16,7 +17,7 @@ async function ProjectsPage({
   const { tags } = await searchParams;
   const activeTags = tags ? tags.split(",").filter(Boolean) : [];
 
-  const payload = await getPayload({ config });
+  const payload = await getCachedPayload();
   const { docs: projects } = await payload.find({
     collection: "projects",
     depth: 0,
