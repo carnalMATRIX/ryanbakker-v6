@@ -48,17 +48,201 @@ export function DotPattern({
   glowColor = "#22d3ee",
   proximity = 120,
   glowIntensity = 1,
-  waveSpeed = 0.5,
+  waveSpeed = 0, // Disabled by default to prevent idle CPU usage and device heating
 }: DotPatternProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const offscreenCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const offscreenCtxRef = useRef<CanvasRenderingContext2D | null>(null);
   const dotsRef = useRef<Dot[]>([]);
   const mouseRef = useRef({ x: -1000, y: -1000 });
   const animationRef = useRef<number | null>(null);
+  const isDrawingRef = useRef(false);
   const startTimeRef = useRef(Date.now());
 
   const baseRgb = useMemo(() => hexToRgb(baseColor), [baseColor]);
   const glowRgb = useMemo(() => hexToRgb(glowColor), [glowColor]);
+
+  const drawOffscreen = useCallback(() => {
+    const offscreenCanvas = offscreenCanvasRef.current;
+    const offscreenCtx = offscreenCtxRef.current;
+    if (!offscreenCanvas || !offscreenCtx) return;
+
+    const dpr = window.devicePixelRatio || 1;
+    offscreenCtx.clearRect(0, 0, offscreenCanvas.width / dpr, offscreenCanvas.height / dpr);
+
+    const radius = dotSize / 2;
+
+    for (const dot of dotsRef.current) {
+      offscreenCtx.fillStyle = `rgba(${baseRgb.r}, ${baseRgb.g}, ${baseRgb.b}, ${dot.baseOpacity})`;
+      offscreenCtx.beginPath();
+      offscreenCtx.arc(dot.x, dot.y, radius, 0, Math.PI * 2);
+      offscreenCtx.fill();
+    }
+  }, [baseRgb, dotSize]);
+
+  const draw = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const dpr = window.devicePixelRatio || 1;
+    ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
+
+    const { x: mx, y: my } = mouseRef.current;
+    const proxSq = proximity * proximity;
+
+    if (waveSpeed > 0) {
+      const time = (Date.now() - startTimeRef.current) * 0.001 * waveSpeed;
+
+      for (const dot of dotsRef.current) {
+        const dx = dot.x - mx;
+        const dy = dot.y - my;
+        const distSq = dx * dx + dy * dy;
+
+        // Wave animation
+        const wave = Math.sin(dot.x * 0.02 + dot.y * 0.02 + time) * 0.5 + 0.5;
+        const waveOpacity = dot.baseOpacity + wave * 0.15;
+        const waveScale = 1 + wave * 0.2;
+
+        let opacity = waveOpacity;
+        let scale = waveScale;
+        let r = baseRgb.r;
+        let g = baseRgb.g;
+        let b = baseRgb.b;
+        let glow = 0;
+
+        // Mouse proximity effect
+        if (distSq < proxSq) {
+          const dist = Math.sqrt(distSq);
+          const t = 1 - dist / proximity;
+          const easedT = t * t * (3 - 2 * t); // smoothstep
+
+          // Interpolate color
+          r = Math.round(baseRgb.r + (glowRgb.r - baseRgb.r) * easedT);
+          g = Math.round(baseRgb.g + (glowRgb.g - baseRgb.g) * easedT);
+          b = Math.round(baseRgb.b + (glowRgb.b - baseRgb.b) * easedT);
+
+          opacity = Math.min(1, waveOpacity + easedT * 0.7);
+          scale = waveScale + easedT * 0.8;
+          glow = easedT * glowIntensity;
+        }
+
+        const radius = (dotSize / 2) * scale;
+
+        // Draw glow
+        if (glow > 0) {
+          const gradient = ctx.createRadialGradient(
+            dot.x,
+            dot.y,
+            0,
+            dot.x,
+            dot.y,
+            radius * 4,
+          );
+          gradient.addColorStop(
+            0,
+            `rgba(${glowRgb.r}, ${glowRgb.g}, ${glowRgb.b}, ${glow * 0.4})`,
+          );
+          gradient.addColorStop(
+            0.5,
+            `rgba(${glowRgb.r}, ${glowRgb.g}, ${glowRgb.b}, ${glow * 0.1})`,
+          );
+          gradient.addColorStop(
+            1,
+            `rgba(${glowRgb.r}, ${glowRgb.g}, ${glowRgb.b}, 0)`,
+          );
+          ctx.beginPath();
+          ctx.arc(dot.x, dot.y, radius * 4, 0, Math.PI * 2);
+          ctx.fillStyle = gradient;
+          ctx.fill();
+        }
+
+        // Draw dot
+        ctx.beginPath();
+        ctx.arc(dot.x, dot.y, radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
+        ctx.fill();
+      }
+
+      animationRef.current = requestAnimationFrame(draw);
+    } else {
+      // Draw pre-rendered static background dots
+      if (offscreenCanvasRef.current) {
+        ctx.drawImage(offscreenCanvasRef.current, 0, 0, canvas.width / dpr, canvas.height / dpr);
+      }
+
+      // Draw only the hovered dots within mouse proximity on top of base dots
+      if (mx !== -1000 || my !== -1000) {
+        for (const dot of dotsRef.current) {
+          const dx = dot.x - mx;
+          const dy = dot.y - my;
+          const distSq = dx * dx + dy * dy;
+
+          if (distSq < proxSq) {
+            const dist = Math.sqrt(distSq);
+            const t = 1 - dist / proximity;
+            const easedT = t * t * (3 - 2 * t); // smoothstep
+
+            const r = Math.round(baseRgb.r + (glowRgb.r - baseRgb.r) * easedT);
+            const g = Math.round(baseRgb.g + (glowRgb.g - baseRgb.g) * easedT);
+            const b = Math.round(baseRgb.b + (glowRgb.b - baseRgb.b) * easedT);
+
+            const opacity = Math.min(1, dot.baseOpacity + easedT * 0.7);
+            const scale = 1 + easedT * 0.8;
+            const glow = easedT * glowIntensity;
+            const radius = (dotSize / 2) * scale;
+
+            // Draw glow
+            if (glow > 0) {
+              const gradient = ctx.createRadialGradient(
+                dot.x,
+                dot.y,
+                0,
+                dot.x,
+                dot.y,
+                radius * 4,
+              );
+              gradient.addColorStop(
+                0,
+                `rgba(${glowRgb.r}, ${glowRgb.g}, ${glowRgb.b}, ${glow * 0.4})`,
+              );
+              gradient.addColorStop(
+                0.5,
+                `rgba(${glowRgb.r}, ${glowRgb.g}, ${glowRgb.b}, ${glow * 0.1})`,
+              );
+              gradient.addColorStop(
+                1,
+                `rgba(${glowRgb.r}, ${glowRgb.g}, ${glowRgb.b}, 0)`,
+              );
+              ctx.beginPath();
+              ctx.arc(dot.x, dot.y, radius * 4, 0, Math.PI * 2);
+              ctx.fillStyle = gradient;
+              ctx.fill();
+            }
+
+            // Draw dot
+            ctx.beginPath();
+            ctx.arc(dot.x, dot.y, radius, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
+            ctx.fill();
+          }
+        }
+      }
+    }
+  }, [proximity, baseRgb, glowRgb, dotSize, glowIntensity, waveSpeed]);
+
+  const requestFrame = useCallback(() => {
+    if (!isDrawingRef.current) {
+      isDrawingRef.current = true;
+      animationRef.current = requestAnimationFrame(() => {
+        draw();
+        isDrawingRef.current = false;
+      });
+    }
+  }, [draw]);
 
   const buildGrid = useCallback(() => {
     const canvas = canvasRef.current;
@@ -75,6 +259,16 @@ export function DotPattern({
 
     const ctx = canvas.getContext("2d");
     if (ctx) ctx.scale(dpr, dpr);
+
+    // Setup offscreen canvas
+    const offscreenCanvas = document.createElement("canvas");
+    offscreenCanvas.width = canvas.width;
+    offscreenCanvas.height = canvas.height;
+    const offscreenCtx = offscreenCanvas.getContext("2d");
+    if (offscreenCtx) offscreenCtx.scale(dpr, dpr);
+
+    offscreenCanvasRef.current = offscreenCanvas;
+    offscreenCtxRef.current = offscreenCtx;
 
     const cellSize = dotSize + gap;
     const cols = Math.ceil(rect.width / cellSize) + 1;
@@ -94,94 +288,12 @@ export function DotPattern({
       }
     }
     dotsRef.current = dots;
-  }, [dotSize, gap]);
 
-  const draw = useCallback(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const dpr = window.devicePixelRatio || 1;
-    ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
-
-    const { x: mx, y: my } = mouseRef.current;
-    const proxSq = proximity * proximity;
-    const time = (Date.now() - startTimeRef.current) * 0.001 * waveSpeed;
-
-    for (const dot of dotsRef.current) {
-      const dx = dot.x - mx;
-      const dy = dot.y - my;
-      const distSq = dx * dx + dy * dy;
-
-      // Wave animation
-      const wave = Math.sin(dot.x * 0.02 + dot.y * 0.02 + time) * 0.5 + 0.5;
-      const waveOpacity = dot.baseOpacity + wave * 0.15;
-      const waveScale = 1 + wave * 0.2;
-
-      let opacity = waveOpacity;
-      let scale = waveScale;
-      let r = baseRgb.r;
-      let g = baseRgb.g;
-      let b = baseRgb.b;
-      let glow = 0;
-
-      // Mouse proximity effect
-      if (distSq < proxSq) {
-        const dist = Math.sqrt(distSq);
-        const t = 1 - dist / proximity;
-        const easedT = t * t * (3 - 2 * t); // smoothstep
-
-        // Interpolate color
-        r = Math.round(baseRgb.r + (glowRgb.r - baseRgb.r) * easedT);
-        g = Math.round(baseRgb.g + (glowRgb.g - baseRgb.g) * easedT);
-        b = Math.round(baseRgb.b + (glowRgb.b - baseRgb.b) * easedT);
-
-        opacity = Math.min(1, waveOpacity + easedT * 0.7);
-        scale = waveScale + easedT * 0.8;
-        glow = easedT * glowIntensity;
-      }
-
-      const radius = (dotSize / 2) * scale;
-
-      // Draw glow
-      if (glow > 0) {
-        const gradient = ctx.createRadialGradient(
-          dot.x,
-          dot.y,
-          0,
-          dot.x,
-          dot.y,
-          radius * 4,
-        );
-        gradient.addColorStop(
-          0,
-          `rgba(${glowRgb.r}, ${glowRgb.g}, ${glowRgb.b}, ${glow * 0.4})`,
-        );
-        gradient.addColorStop(
-          0.5,
-          `rgba(${glowRgb.r}, ${glowRgb.g}, ${glowRgb.b}, ${glow * 0.1})`,
-        );
-        gradient.addColorStop(
-          1,
-          `rgba(${glowRgb.r}, ${glowRgb.g}, ${glowRgb.b}, 0)`,
-        );
-        ctx.beginPath();
-        ctx.arc(dot.x, dot.y, radius * 4, 0, Math.PI * 2);
-        ctx.fillStyle = gradient;
-        ctx.fill();
-      }
-
-      // Draw dot
-      ctx.beginPath();
-      ctx.arc(dot.x, dot.y, radius, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
-      ctx.fill();
+    if (waveSpeed === 0) {
+      drawOffscreen();
+      requestFrame();
     }
-
-    animationRef.current = requestAnimationFrame(draw);
-  }, [proximity, baseRgb, glowRgb, dotSize, glowIntensity, waveSpeed]);
+  }, [dotSize, gap, waveSpeed, drawOffscreen, requestFrame]);
 
   useEffect(() => {
     buildGrid();
@@ -199,8 +311,12 @@ export function DotPattern({
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          if (!animationRef.current) {
-            animationRef.current = requestAnimationFrame(draw);
+          if (waveSpeed > 0) {
+            if (!animationRef.current) {
+              animationRef.current = requestAnimationFrame(draw);
+            }
+          } else {
+            requestFrame();
           }
         } else {
           if (animationRef.current) {
@@ -220,7 +336,7 @@ export function DotPattern({
       observer.disconnect();
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
-  }, [draw]);
+  }, [draw, requestFrame, waveSpeed]);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -231,10 +347,16 @@ export function DotPattern({
         x: e.clientX - rect.left,
         y: e.clientY - rect.top,
       };
+      if (waveSpeed === 0) {
+        requestFrame();
+      }
     };
 
     const handleMouseLeave = () => {
       mouseRef.current = { x: -1000, y: -1000 };
+      if (waveSpeed === 0) {
+        requestFrame();
+      }
     };
 
     const container = containerRef.current;

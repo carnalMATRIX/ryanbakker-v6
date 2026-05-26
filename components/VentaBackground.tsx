@@ -28,7 +28,52 @@ export function VantaBackground({
 }: VantaBackgroundProps) {
   const vantaRef = useRef<HTMLDivElement>(null);
   const vantaEffectRef = useRef<any>(null);
+  const isIntersectingRef = useRef(true);
   const [p5Loaded, setP5Loaded] = useState(() => typeof window !== "undefined" && !!window.p5);
+
+  // Animation visibility duration limits (freeze after 6s of cumulative visibility)
+  const animationTimeRef = useRef(0);
+  const lastStartedRef = useRef<number | null>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const startVantaAnimation = () => {
+    if (!vantaEffectRef.current || !vantaEffectRef.current.p5) return;
+
+    const remaining = 6000 - animationTimeRef.current;
+    if (remaining <= 0) {
+      vantaEffectRef.current.p5.noLoop();
+      return;
+    }
+
+    vantaEffectRef.current.p5.loop();
+    lastStartedRef.current = Date.now();
+
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => {
+      if (vantaEffectRef.current && vantaEffectRef.current.p5) {
+        vantaEffectRef.current.p5.noLoop();
+      }
+      animationTimeRef.current = 6000;
+      lastStartedRef.current = null;
+      timeoutRef.current = null;
+    }, remaining);
+  };
+
+  const stopVantaAnimation = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+
+    if (lastStartedRef.current !== null) {
+      animationTimeRef.current += Date.now() - lastStartedRef.current;
+      lastStartedRef.current = null;
+    }
+
+    if (vantaEffectRef.current && vantaEffectRef.current.p5) {
+      vantaEffectRef.current.p5.noLoop();
+    }
+  };
 
   const initVanta = () => {
     if (
@@ -51,6 +96,13 @@ export function VantaBackground({
           color: hexToNumber(foreground),
           backgroundColor: hexToNumber(background),
         });
+
+        // Handle initial visibility state
+        if (isIntersectingRef.current) {
+          startVantaAnimation();
+        } else {
+          stopVantaAnimation();
+        }
       } catch (error) {
         console.error("Vanta Init error", error);
       }
@@ -60,6 +112,7 @@ export function VantaBackground({
   // Clean up on unmount
   useEffect(() => {
     return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
       if (vantaEffectRef.current) {
         vantaEffectRef.current.destroy();
         vantaEffectRef.current = null;
@@ -83,6 +136,30 @@ export function VantaBackground({
       initVanta();
     }
   }, [p5Loaded]);
+
+  // Intersection Observer to pause Vanta's p5 rendering loop when off-screen
+  useEffect(() => {
+    const element = vantaRef.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isIntersectingRef.current = entry.isIntersecting;
+        if (entry.isIntersecting) {
+          startVantaAnimation();
+        } else {
+          stopVantaAnimation();
+        }
+      },
+      { threshold: 0 }
+    );
+
+    observer.observe(element);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   return (
     <>
