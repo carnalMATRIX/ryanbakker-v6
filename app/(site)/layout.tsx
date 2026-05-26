@@ -78,6 +78,19 @@ export const metadata: Metadata = {
   verification: {
     google: "h6rwsFmLvUDMraGKOrSUzUJbg57HbkOMtiLkGHatpt4",
   },
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon", type: "image/png", sizes: "48x48" },
+    ],
+    apple: [
+      { url: "/apple-icon", sizes: "180x180", type: "image/png" },
+    ],
+  },
+};
+
+export const viewport = {
+  themeColor: "#0a0a0a",
 };
 
 export default function RootLayout({
