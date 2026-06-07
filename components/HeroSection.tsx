@@ -35,8 +35,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ data }) => {
               Ryan Bakker
             </h1>
           </div>
-          <div className="inline-block bg-white px-4 py-1 mt-4">
-            <span className="text-black text-3xl! md:text-sm font-bold tracking-[0.3em] uppercase">
+          <div className="inline-block bg-white px-3 md:px-4 py-1 mt-4">
+            <span className="text-black md:text-3xl! font-bold tracking-[0.3em] uppercase">
               {creativeLabel}
             </span>
           </div>
@@ -50,9 +50,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ data }) => {
         {/* Navigation & Action Bar */}
         <div className="w-full flex flex-col md:flex-row md:items-center justify-between pt-20 space-y-8 md:space-y-0">
           {/* Left Utilities (Actions) */}
-          <div className="flex items-center space-x-9">
-            <Link href="/projects">
-              <button className="group flex items-center space-x-3 bg-[#b492f4] hover:bg-[#c0a5f9] text-black px-6 py-3 rounded-full transition-all duration-300 transform hover:scale-105 active:scale-95  cursor-pointer">
+          <div className="flex flex-col md:flex-row gap-8 items-center">
+            <Link href="/projects" className="w-full md:w-auto">
+              <button className="group flex items-center space-x-3 bg-[#b492f4] hover:bg-[#c0a5f9] text-black px-6 py-3 rounded-full transition-all duration-300 transform hover:scale-105 active:scale-95  cursor-pointer w-full md:w-auto justify-center">
                 <Folder size={18} className="text-black group" />
                 <span className="font-bold text-sm tracking-wider uppercase">
                   View Projects
@@ -62,7 +62,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ data }) => {
 
             <Link href="/#continue">
               <button className="group flex items-center space-x-2 text-white/70 hover:text-white transition-colors duration-300 cursor-pointer">
-                <span className="font-medium text-sm tracking-wider uppercase">
+                <span className="font-medium text-sm tracking-wider uppercase w-full md:w-auto">
                   Continue Reading
                 </span>
                 <div className="flex flex-col -space-y-1">
@@ -74,7 +74,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ data }) => {
           </div>
 
           {/* Right Utilities (Socials) */}
-          <div className="flex items-center space-x-8">
+          <div className="flex items-center space-x-8 justify-center md:justify-end mt-4 md:mt-0">
             {HERO_SOCIAL_LINKS.map((social) => (
               <SocialLink
                 key={social.label}
