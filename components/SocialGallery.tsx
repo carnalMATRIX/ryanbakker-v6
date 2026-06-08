@@ -119,7 +119,7 @@ function SocialGallery({ socialCards }: { socialCards?: SocialCard[] | null }) {
 
                 <Link
                   href={
-                    linkedinCard?.link || "https://linkedin.com/in/ryan-bakker"
+                    linkedinCard?.link || "https://linkedin.com/in/rd-beckett"
                   }
                   target="_blank"
                   className="ml-auto w-full md:w-auto"

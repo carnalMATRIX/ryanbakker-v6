@@ -360,7 +360,7 @@ export const socialLinks: SocialLink[] = [
     Icon: SpotifyIcon,
   },
   {
-    href: "https://linkedin.com/in/ryan-bakker",
+    href: "https://linkedin.com/in/rd-beckett",
     label: "LinkedIn",
     Icon: LinkedInIcon,
   },
@@ -383,7 +383,7 @@ export const HERO_SOCIAL_LINKS = [
     Icon: SpotifyIcon,
   },
   {
-    href: "https://linkedin.com/in/ryan-bakker",
+    href: "https://linkedin.com/in/rd-beckett",
     label: "LinkedIn",
     Icon: LinkedInIcon,
   },

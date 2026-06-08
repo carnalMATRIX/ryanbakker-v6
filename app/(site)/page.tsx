@@ -63,7 +63,7 @@ export default async function Home() {
     jobTitle: "Full Stack Developer & Digital Artist",
     sameAs: [
       "https://github.com/carnalMATRIX",
-      "https://linkedin.com/in/ryan-bakker",
+      "https://linkedin.com/in/rd-beckett",
       "https://www.instagram.com/rd.beckett/",
     ],
     description:
