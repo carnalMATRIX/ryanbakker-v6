@@ -1,14 +1,15 @@
-import type { MetadataRoute } from 'next'
+import type { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
-  const siteUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://ryanbakker.vercel.app'
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SERVER_URL || "https://beckett.vercel.app";
 
   return {
     rules: {
-      userAgent: '*',
-      allow: '/',
-      disallow: ['/admin', '/api'],
+      userAgent: "*",
+      allow: "/",
+      disallow: ["/admin", "/api"],
     },
     sitemap: `${siteUrl}/sitemap.xml`,
-  }
+  };
 }

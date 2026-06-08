@@ -80,7 +80,8 @@ export async function generateMetadata({
     }
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SERVER_URL || "https://ryanbakker.vercel.app";
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SERVER_URL || "https://beckett.vercel.app";
 
   return {
     title,
@@ -135,7 +136,8 @@ export default async function ProjectSinglePage({ params }: PageProps) {
   const project = projects[0];
   const hasArticle = !!project.projectArticle;
   const hasImages = !!project.images?.length;
-  const siteUrl = process.env.NEXT_PUBLIC_SERVER_URL || "https://ryanbakker.vercel.app";
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SERVER_URL || "https://beckett.vercel.app";
 
   const projectSchema = {
     "@context": "https://schema.org",

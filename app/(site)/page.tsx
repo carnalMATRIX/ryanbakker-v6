@@ -52,7 +52,8 @@ export default async function Home() {
   });
 
   const data = homeContent.docs[0];
-  const siteUrl = process.env.NEXT_PUBLIC_SERVER_URL || "https://ryanbakker.vercel.app";
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SERVER_URL || "https://beckett.vercel.app";
 
   const personSchema = {
     "@context": "https://schema.org",
@@ -65,7 +66,8 @@ export default async function Home() {
       "https://linkedin.com/in/ryan-bakker",
       "https://www.instagram.com/rm_bakker/",
     ],
-    description: "Ryan Bakker is a Full Stack Developer and Digital Artist specializing in building modern web applications.",
+    description:
+      "Ryan Bakker is a Full Stack Developer and Digital Artist specializing in building modern web applications.",
   };
 
   const websiteSchema = {
@@ -80,9 +82,8 @@ export default async function Home() {
       <JsonLd data={personSchema} />
       <JsonLd data={websiteSchema} />
       <HomeClient data={data} />
-...
+      ...
       <ProjectSection projects={projects.docs} />
-
       <EducationSection
         quote={data?.educationQuote}
         quoteAuthor={data?.educationQuoteAuthor}
@@ -102,16 +103,13 @@ export default async function Home() {
           ) : null,
         }))}
       />
-
       <InspoSection inspirations={data.inspirations} />
-
       <SocialSection
         socialCards={data?.socialCards as SocialCard[]}
         contactDescription={data?.contactDescription}
         location={data?.location}
         email={data?.email}
       />
-
       <div className="h-20 bg-neutral-950" />
       <Footer />
     </main>

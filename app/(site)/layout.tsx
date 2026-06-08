@@ -18,7 +18,7 @@ const crimsonPro = Crimson_Pro({
 });
 
 const siteUrl =
-  process.env.NEXT_PUBLIC_SERVER_URL || "https://ryanbakker.vercel.app";
+  process.env.NEXT_PUBLIC_SERVER_URL || "https://beckett.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -83,9 +83,7 @@ export const metadata: Metadata = {
       { url: "/favicon.ico", sizes: "any" },
       { url: "/icon", type: "image/png", sizes: "48x48" },
     ],
-    apple: [
-      { url: "/apple-icon", sizes: "180x180", type: "image/png" },
-    ],
+    apple: [{ url: "/apple-icon", sizes: "180x180", type: "image/png" }],
   },
 };
 
