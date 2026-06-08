@@ -160,10 +160,10 @@ export default function ContactSection({
           <p className="text-white/90 text-sm md:text-base">
             Email me directly:{" "}
             <a
-              href={`mailto:${email || "ryanbakker@outlook.co.nz"}?subject=Inquiry%20from%20Personal%20Site`}
+              href={`mailto:${email || "ryan.beckett.d@gmail.com"}?subject=Inquiry%20from%20Personal%20Site`}
               className="underline underline-offset-7 hover:text-white/70 transition-colors"
             >
-              {email || "ryanbakker@outlook.co.nz"}
+              {email || "ryan.beckett.d@gmail.com"}
             </a>
           </p>
         </div>

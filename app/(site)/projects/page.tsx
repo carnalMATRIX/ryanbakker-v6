@@ -12,7 +12,8 @@ export const revalidate = 3600; // revalidate every hour
 
 export const metadata: Metadata = {
   title: "Project Archive",
-  description: "Browse through a collection of projects by Ryan Bakker, ranging from web development to photography and digital art.",
+  description:
+    "Browse through a collection of projects by Ryan Beckett, ranging from web development to photography and digital art.",
   alternates: {
     canonical: "/projects",
   },

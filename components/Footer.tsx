@@ -6,7 +6,7 @@ function Footer() {
           viewBox="0 0 1004 200"
           className="w-[101%] h-[40vh] min-h-50 -ml-1 md:-ml-3"
           preserveAspectRatio="none"
-          aria-label="Ryan Bakker"
+          aria-label="Ryan Beckett"
         >
           <text
             x="0"
@@ -17,7 +17,7 @@ function Footer() {
             fill="#FFC58E"
             className="font-medium uppercase tracking-tighter"
           >
-            Ryan Bakker
+            Ryan Beckett
           </text>
         </svg>
 

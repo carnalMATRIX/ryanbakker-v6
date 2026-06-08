@@ -365,7 +365,7 @@ export const socialLinks: SocialLink[] = [
     Icon: LinkedInIcon,
   },
   {
-    href: "https://www.instagram.com/rm_bakker/",
+    href: "https://www.instagram.com/rd.beckett/",
     label: "Instagram",
     Icon: InstagramIcon,
   },
@@ -388,7 +388,7 @@ export const HERO_SOCIAL_LINKS = [
     Icon: LinkedInIcon,
   },
   {
-    href: "https://www.instagram.com/rm_bakker/",
+    href: "https://www.instagram.com/rd.beckett/",
     label: "Instagram",
     Icon: InstagramIcon,
   },

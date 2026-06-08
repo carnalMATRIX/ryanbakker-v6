@@ -152,7 +152,7 @@ function SocialGallery({ socialCards }: { socialCards?: SocialCard[] | null }) {
                 <Link
                   href={
                     instagramCard?.link ||
-                    "https://www.instagram.com/rm_bakker/"
+                    "https://www.instagram.com/rd.beckett/"
                   }
                   target="_blank"
                   className="ml-auto w-full md:w-auto"

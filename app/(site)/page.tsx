@@ -17,7 +17,7 @@ export const revalidate = 3600; // revalidate every hour
 export const metadata: Metadata = {
   title: "Home | Full Stack Developer & Digital Artist",
   description:
-    "Ryan Bakker: AUT Software Development & AI student blending technical logic with visual design. Specializing in Next.js, web architecture, and human-AI interaction.",
+    "Ryan Beckett: AUT Software Development & AI student blending technical logic with visual design. Specializing in Next.js, web architecture, and human-AI interaction.",
   alternates: {
     canonical: "/",
   },
@@ -58,22 +58,22 @@ export default async function Home() {
   const personSchema = {
     "@context": "https://schema.org",
     "@type": "Person",
-    name: "Ryan Bakker",
+    name: "Ryan Beckett",
     url: siteUrl,
     jobTitle: "Full Stack Developer & Digital Artist",
     sameAs: [
       "https://github.com/carnalMATRIX",
       "https://linkedin.com/in/ryan-bakker",
-      "https://www.instagram.com/rm_bakker/",
+      "https://www.instagram.com/rd.beckett/",
     ],
     description:
-      "Ryan Bakker is a Full Stack Developer and Digital Artist specializing in building modern web applications.",
+      "Ryan Beckett is a Full Stack Developer and Digital Artist specializing in building modern web applications.",
   };
 
   const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "Ryan Bakker Portfolio",
+    name: "Ryan Beckett Portfolio",
     url: siteUrl,
   };
 

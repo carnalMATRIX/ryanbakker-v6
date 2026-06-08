@@ -23,13 +23,13 @@ const siteUrl =
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Ryan Bakker | Full Stack Developer & Digital Artist",
-    template: "%s | Ryan Bakker",
+    default: "Ryan Beckett | Full Stack Developer & Digital Artist",
+    template: "%s | Ryan Beckett",
   },
   description:
-    "Portfolio of Ryan Bakker, a Full Stack Developer and Digital Artist specializing in building modern web applications and digital experiences.",
+    "Portfolio of Ryan Beckett, a Full Stack Developer and Digital Artist specializing in building modern web applications and digital experiences.",
   keywords: [
-    "Ryan Bakker",
+    "Ryan Beckett",
     "Full Stack Developer",
     "Digital Artist",
     "Web Development",
@@ -37,32 +37,32 @@ export const metadata: Metadata = {
     "Next.js",
     "Portfolio",
   ],
-  authors: [{ name: "Ryan Bakker", url: siteUrl }],
-  creator: "Ryan Bakker",
+  authors: [{ name: "Ryan Beckett", url: siteUrl }],
+  creator: "Ryan Beckett",
   openGraph: {
     type: "website",
     locale: "en_AU",
     url: siteUrl,
-    siteName: "Ryan Bakker",
-    title: "Ryan Bakker | Full Stack Developer & Digital Artist",
+    siteName: "Ryan Beckett",
+    title: "Ryan Beckett | Full Stack Developer & Digital Artist",
     description:
-      "Portfolio of Ryan Bakker, a Full Stack Developer and Digital Artist specializing in building modern web applications and digital experiences.",
+      "Portfolio of Ryan Beckett, a Full Stack Developer and Digital Artist specializing in building modern web applications and digital experiences.",
     images: [
       {
         url: "/hero_img.png",
         width: 1200,
         height: 630,
-        alt: "Ryan Bakker Portfolio",
+        alt: "Ryan Beckett Portfolio",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ryan Bakker | Full Stack Developer & Digital Artist",
+    title: "Ryan Beckett | Full Stack Developer & Digital Artist",
     description:
-      "Portfolio of Ryan Bakker, a Full Stack Developer and Digital Artist specializing in building modern web applications and digital experiences.",
+      "Portfolio of Ryan Beckett, a Full Stack Developer and Digital Artist specializing in building modern web applications and digital experiences.",
     images: ["/hero_img.png"],
-    creator: "@Ryan_Bakker_",
+    creator: "@Ryan_Beckett_",
   },
   robots: {
     index: true,

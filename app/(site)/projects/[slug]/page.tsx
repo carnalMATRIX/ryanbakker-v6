@@ -54,7 +54,7 @@ export async function generateMetadata({
   }
 
   const project = projects[0];
-  const title = `${project.title} | Ryan Bakker`;
+  const title = `${project.title} | Ryan Beckett`;
   const description = project.projectDetails?.description || "";
   const hasArticle = !!project.projectArticle;
 
@@ -93,14 +93,14 @@ export async function generateMetadata({
       title,
       description,
       url: `${siteUrl}/projects/${slug}`,
-      siteName: "Ryan Bakker",
+      siteName: "Ryan Beckett",
       images: ogImages,
       type: hasArticle ? "article" : "website",
       ...(hasArticle
         ? {
             publishedTime: project.createdAt,
             modifiedTime: project.updatedAt,
-            authors: ["Ryan Bakker"],
+            authors: ["Ryan Beckett"],
             section: "Projects",
             tags: project.tags?.map((t) => t.label).filter(Boolean) as string[],
           }
@@ -149,7 +149,7 @@ export default async function ProjectSinglePage({ params }: PageProps) {
     dateModified: project.updatedAt,
     author: {
       "@type": "Person",
-      name: "Ryan Bakker",
+      name: "Ryan Beckett",
     },
     ...(hasArticle
       ? {

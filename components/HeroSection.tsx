@@ -32,7 +32,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ data }) => {
               Hello, I&apos;m
             </p>
             <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold text-white tracking-tight leading-none uppercase -ml-1.5">
-              Ryan Bakker
+              Ryan Beckett
             </h1>
           </div>
           <div className="inline-block bg-white px-3 md:px-4 py-1 mt-4">
