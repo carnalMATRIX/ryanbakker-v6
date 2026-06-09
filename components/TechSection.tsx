@@ -1,7 +1,7 @@
 "use client";
 
-import { STACK_DATA, STACK_THEMES } from "@/constants";
-import TechCard from "./TechCard";
+import { STACK_DATA } from "@/constants";
+import { AnimateOnScroll } from "./AnimateOnScroll";
 
 function TechSection({
   activeIndex,
@@ -11,85 +11,76 @@ function TechSection({
   onToggle: (newIndex: number) => void;
 }) {
   const activeData = STACK_DATA[activeIndex];
-  const theme = STACK_THEMES[activeData.theme];
-
-  const handleToggle = () => {
-    onToggle((activeIndex + 1) % STACK_DATA.length);
-  };
 
   return (
-    <section
-      className={`relative w-full py-24 transition-colors duration-700 ease-in-out ${theme.bgClass}`}
-    >
-      <div className="w-full max-w-6xl mx-auto px-4">
-        {/* RELATIVE WRAPPER for Blueprint lines and the Grid */}
-        <div className="relative w-full">
-          {/* Blueprint lines (z-0) */}
-          <div className="absolute top-[33.5%] md:top-[30.6%] left-0 w-[90%] h-px bg-white/20 z-0" />
-          <div className="absolute top-[67.8%] md:top-[66%] left-[10%] w-[90%] h-px bg-white/20 z-0" />
-          <div className="absolute top-[5%] left-[50%] w-px h-[90%] bg-white/20 z-0" />
-          <div className="absolute top-[10%] left-[24.4%] w-px h-[80%] bg-white/20 z-0 hidden md:block" />
-          <div className="absolute top-[15%] left-[75.5%] w-px h-[70%] bg-white/20 z-0 hidden md:block" />
+    <section className="relative w-full py-24 md:py-32 bg-transparent radial-purple border-t border-white/5 overflow-hidden">
+      <div className="max-w-6xl mx-auto px-4">
+        {/* Section Heading */}
+        <div className="max-w-3xl mx-auto text-center mb-10 md:mb-14">
+          <AnimateOnScroll delay={0}>
+            <span className="text-xs md:text-sm font-bold uppercase tracking-widest text-[#b492f4] block mb-2">
+              Core Capabilities
+            </span>
+          </AnimateOnScroll>
+          <AnimateOnScroll delay={100}>
+            <h3 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-white font-sans">
+              Technical Stack
+            </h3>
+          </AnimateOnScroll>
+        </div>
 
-          {/* Grid (z-10) */}
-          <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 grid-rows-auto gap-5 md:gap-x-6 md:gap-y-8">
-            {/* Cell 1: Header */}
-            <div
-              className={`flex flex-col justify-center items-center font-bold text-3xl tracking-widest text-white transition-colors duration-500 ${theme.cellClass} py-8 h-full min-h-40`}
-            >
-              <h4 className="border-t-4 border-b-4 border-white py-1 text-center leading-tight flex flex-col items-center gap-1 font-black">
-                TECH <span className="h-1 w-[90%] bg-white rounded-none" />{" "}
-                STACK
-              </h4>
-            </div>
-
-            {/* Cell 2: Button */}
-            <div className="flex items-end">
-              <button
-                onClick={handleToggle}
-                className="flex items-center gap-4 bg-[#EBEBEB] w-full justify-between px-3 py-2.5 hover:bg-white transition-colors group cursor-pointer"
-                style={{ color: theme.accentColor }}
-              >
-                <span className="font-bold text-lg">{activeData.name}</span>
-                <span
-                  className="text-white rounded-full p-1 transform group-hover:translate-x-1 transition-transform"
-                  style={{ backgroundColor: theme.accentColor }}
+        {/* Tabs Selector */}
+        <AnimateOnScroll delay={150} className="w-full">
+          <div className="flex flex-wrap justify-center gap-3 mb-16">
+            {STACK_DATA.map((data, index) => {
+              const isActive = activeIndex === index;
+              return (
+                <button
+                  key={data.id}
+                  onClick={() => onToggle(index)}
+                  className={`px-6 py-2.5 rounded-full font-bold text-xs tracking-widest uppercase transition-all duration-300 border cursor-pointer hover:scale-105 active:scale-95 ${
+                    isActive
+                      ? "bg-white text-black border-transparent shadow-[0_0_20px_rgba(255,255,255,0.15)]"
+                      : "bg-white/5 text-zinc-400 border-white/10 hover:text-white hover:border-white/20"
+                  }`}
                 >
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M5 12h14M12 5l7 7-7 7" />
-                  </svg>
-                </span>
-              </button>
-            </div>
-
-            {/* Cell 3 & 4: Empty Grid Slots */}
-            <div className="hidden md:block"></div>
-            <div className="hidden md:block"></div>
-
-            {/* Render tech cards (2 on mobile, up to 8 on desktop) */}
-            {Array.from({ length: 8 }).map((_, i) => (
-              <div
-                key={i}
-                className={`w-full h-full ${i >= 4 ? "hidden md:block" : ""}`}
-              >
-                <TechCard
-                  cardIndex={i}
-                  cellClass={theme.cellClass}
-                  items={activeData.items}
-                  icons={activeData.icons}
-                />
-              </div>
-            ))}
+                  {data.name}
+                </button>
+              );
+            })}
           </div>
+        </AnimateOnScroll>
+
+        {/* Tech Stack Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 relative z-10">
+          {activeData.items.map((item, idx) => {
+            const Icon = activeData.icons[idx];
+            return (
+              <AnimateOnScroll
+                key={item}
+                delay={idx * 100}
+                direction="up"
+                className="w-full"
+              >
+                <div className="group relative w-full rounded-[24px] md:rounded-[32px] border border-white/10 bg-zinc-900/30 backdrop-blur-md p-8 flex flex-col items-center text-center hover:border-white/20 hover:scale-[1.02] hover:shadow-[0_20px_50px_rgba(180,146,244,0.05)] transition-all duration-500 cursor-pointer h-full justify-center min-h-60">
+                  {/* Subtle Glow Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/5 via-transparent to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-500 rounded-[24px] md:rounded-[32px] z-0" />
+
+                  {/* Icon */}
+                  {Icon && (
+                    <div className="text-white mb-6 group-hover:scale-110 transition-transform duration-500 relative z-10">
+                      <Icon className="w-14 h-14 md:w-16 md:h-16" />
+                    </div>
+                  )}
+
+                  {/* Name */}
+                  <h4 className="text-xl md:text-2xl font-black uppercase tracking-tight text-white relative z-10 group-hover:text-[#b492f4] transition-colors duration-300">
+                    {item}
+                  </h4>
+                </div>
+              </AnimateOnScroll>
+            );
+          })}
         </div>
       </div>
     </section>

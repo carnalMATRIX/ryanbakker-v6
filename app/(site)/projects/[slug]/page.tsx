@@ -13,6 +13,7 @@ import { ShareButton } from "@/components/ShareButton";
 import { VantaBackground } from "@/components/VentaBackground";
 import type { Metadata } from "next";
 import JsonLd from "@/components/JsonLd";
+import { AnimateOnScroll } from "@/components/AnimateOnScroll";
 
 export const revalidate = 3600; // revalidate every hour
 
@@ -177,32 +178,40 @@ export default async function ProjectSinglePage({ params }: PageProps) {
 
         <section className="mt-8 md:mt-20 z-50 relative px-2 md:px-0">
           <div className="max-w-6xl mx-auto flex flex-col items-start gap-10 px-2 md:px-8 lg:px-0">
-            <Link href="/projects" passHref>
-              <Button
-                variant="refined-outline"
-                iconLeft={<Undo2 />}
-                className="whitespace-nowrap"
-              >
-                Back to Project Archive
-              </Button>
-            </Link>
+            <AnimateOnScroll delay={0} direction="up">
+              <Link href="/projects" passHref>
+                <Button
+                  variant="refined-outline"
+                  iconLeft={<Undo2 />}
+                  className="whitespace-nowrap"
+                >
+                  Back to Project Archive
+                </Button>
+              </Link>
+            </AnimateOnScroll>
 
-            <div className="flex flex-col gap-2 w-full">
-              <h1 className="text-white font-extrabold text-3xl md:text-[45px] leading-tight tracking-tighter md:leading-12 uppercase line-clamp-6 w-full">
-                {project.title}
-              </h1>
-              <p className="text-xs text-neutral-400 font-medium uppercase tracking-wider">
-                Published on{" "}
-                {new Date(project.createdAt).toLocaleDateString("en-US", {
-                  month: "long",
-                  day: "numeric",
-                  year: "numeric",
-                })}
-              </p>
-            </div>
+            <AnimateOnScroll delay={150} direction="up" className="w-full">
+              <div className="flex flex-col gap-2 w-full">
+                <h1 className="text-white font-extrabold text-3xl md:text-[45px] leading-tight tracking-tighter md:leading-12 uppercase line-clamp-6 w-full">
+                  {project.title}
+                </h1>
+                <p className="text-xs text-neutral-400 font-medium uppercase tracking-wider">
+                  Published on{" "}
+                  {new Date(project.createdAt).toLocaleDateString("en-US", {
+                    month: "long",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
+                </p>
+              </div>
+            </AnimateOnScroll>
           </div>
 
-          <div className="max-w-7xl mx-auto mt-4 pt-8 md:pt-12 pb-12 md:pb-18 relative mb-4 px-0 md:px-8 lg:px-0">
+          <AnimateOnScroll
+            delay={300}
+            direction="up"
+            className="max-w-7xl mx-auto mt-4 pt-8 md:pt-12 pb-12 md:pb-18 relative mb-4 px-0 md:px-8 lg:px-0"
+          >
             {/* Background elements container that defines the bounds of the purple card */}
             <div className="absolute left-1 md:left-3.75 top-1 md:top-2.5 right-1 md:right-6.25 bottom-1 md:bottom-7.5 pointer-events-none overflow-hidden rounded-[24px] md:rounded-[40px]">
               <VantaBackground
@@ -425,7 +434,7 @@ export default async function ProjectSinglePage({ params }: PageProps) {
                 </div>
               )}
             </div>
-          </div>
+          </AnimateOnScroll>
 
           {hasArticle && project.projectArticle && (
             <article className="max-w-3xl mx-auto px-3 md:px-8 lg:px-0 text-white mb-16 mt-10">

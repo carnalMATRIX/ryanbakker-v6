@@ -2,7 +2,8 @@
 
 import { useState, ChangeEvent, FocusEvent, FormEvent } from "react";
 import { Button } from "./ui/button";
-import { Send } from "lucide-react";
+import { Send, MapPin, Mail } from "lucide-react";
+import { AnimateOnScroll } from "./AnimateOnScroll";
 
 interface ContactSectionProps {
   contactDescription?: string | null;
@@ -41,7 +42,7 @@ export default function ContactSection({
     message: false,
   });
 
-  // Handle typing - Typed for both Input and Textarea
+  // Handle typing
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -49,7 +50,7 @@ export default function ContactSection({
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Handle clicking away from an input - Typed for both Input and Textarea
+  // Handle clicking away from an input
   const handleBlur = (
     e: FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -138,199 +139,94 @@ export default function ContactSection({
   };
 
   return (
-    <section className="text-white py-8 md:py-12 px-3 md:px-12 max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 lg:gap-8 items-center">
+    <section className="text-white py-16 md:py-24 px-4 md:px-12 max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 lg:gap-20 items-center">
       {/* Left Column: Text Content */}
-      <div className="flex flex-col max-w-lg">
-        <h2 className="text-4xl font-medium tracking-tight mb-6 uppercase">
-          Let&apos;s build something{" "}
-          <span className="font-extrabold">meaningful</span>
-        </h2>
-        <p className="text-white/80 md:text-lg font-light mb-8 md:mb-16 max-w-125">
+      <AnimateOnScroll className="flex flex-col max-w-lg space-y-8" delay={0}>
+        <div className="space-y-3">
+          <span className="text-xs md:text-sm font-bold uppercase tracking-widest text-[#b492f4] block">
+            Get In Touch
+          </span>
+          <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-white font-sans leading-none">
+            Let&apos;s build something{" "}
+            <span className="text-[#b492f4]">meaningful</span>
+          </h2>
+        </div>
+
+        <p className="text-zinc-300 md:text-lg font-light leading-relaxed max-w-125 font-inter">
           {contactDescription ||
             "I'm always looking to connect with teams working on software, human-computer interaction, intelligence, or high-impact digital products."}
         </p>
 
-        <div>
-          <h3 className="text-xs font-medium text-white/70 mb-3">
+        {/* Detailed Info Cards */}
+        <div className="space-y-4 pt-4 border-t border-white/10">
+          <h3 className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-4">
             The Quick & Simple
           </h3>
-          <p className="mb-1 text-white/90 text-sm md:text-base">
-            Based in {location || "Auckland, New Zealand"}
-          </p>
-          <p className="text-white/90 text-sm md:text-base">
-            Email me directly:{" "}
+
+          <div className="flex flex-col sm:flex-row gap-4 w-full">
+            {/* Location Card */}
+            <div className="flex-1 flex items-center gap-4 bg-white/5 border border-white/10 rounded-2xl p-4 hover:border-white/20 transition-all duration-300">
+              <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-[#b492f4]">
+                <MapPin size={18} />
+              </div>
+              <div>
+                <h4 className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
+                  Location
+                </h4>
+                <p className="text-sm text-zinc-200 font-medium">
+                  {location || "Auckland, NZ"}
+                </p>
+              </div>
+            </div>
+
+            {/* Email Card */}
             <a
               href={`mailto:${email || "ryan.beckett.d@gmail.com"}?subject=Inquiry%20from%20Personal%20Site`}
-              className="underline underline-offset-7 hover:text-white/70 transition-colors"
+              className="flex-1 flex items-center gap-4 bg-white/5 border border-white/10 rounded-2xl p-4 hover:border-[#b492f4]/30 hover:bg-white/10 transition-all duration-300 group"
             >
-              {email || "ryan.beckett.d@gmail.com"}
+              <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-[#b492f4] group-hover:bg-[#b492f4] group-hover:text-black transition-colors duration-300">
+                <Mail size={18} />
+              </div>
+              <div className="min-w-0">
+                <h4 className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
+                  Email
+                </h4>
+                <p className="text-sm text-zinc-200 font-medium group-hover:text-[#b492f4] transition-colors truncate">
+                  {email || "ryan.beckett.d@gmail.com"}
+                </p>
+              </div>
             </a>
-          </p>
+          </div>
         </div>
-      </div>
+      </AnimateOnScroll>
 
       {/* Right Column: Form Container */}
-      <div className="relative w-full max-w-md mx-auto lg:ml-auto lg:mr-0 md:mt-8 lg:mt-0">
+      <AnimateOnScroll
+        className="relative w-full max-w-lg mx-auto lg:ml-auto lg:mr-0"
+        delay={200}
+      >
         {/* Status Badge */}
-        <div className="absolute -top-3 right-4 bg-green-950/90 border border-green-800 text-white/90 text-xs px-3 py-1.5 rounded-full flex items-center gap-2 z-20 shadow-lg backdrop-blur-md">
+        <div className="absolute -top-3.5 right-6 bg-zinc-950 border border-white/10 text-white/90 text-[10px] font-mono font-bold tracking-widest uppercase px-4 py-2 rounded-full flex items-center gap-2.5 z-20 shadow-xl backdrop-blur-md">
           {/* Pulsing Dot */}
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-[105%] w-[105%] rounded-full bg-green-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.8)]"></span>
           </span>
-          Currently open for collaboration
+          Open for Collaboration
         </div>
 
-        {/* Form Card */}
-        <div className="relative w-full min-h-120 flex flex-col justify-between">
-          {/* Background SVG Wrapper */}
-          <div className="absolute inset-0 z-0 pointer-events-none">
-            <svg
-              viewBox="0 0 457 409"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-full h-full"
-              preserveAspectRatio="none"
-            >
-              <g filter="url(#filter0_diif_104_1391)">
-                <rect
-                  x="4"
-                  y="1"
-                  width="calc(100% - 8px)"
-                  height="calc(100% - 10px)"
-                  rx="30"
-                  fill="url(#paint0_linear_104_1391)"
-                  shapeRendering="crispEdges"
-                />
-                <rect
-                  x="4.5"
-                  y="1.5"
-                  width="calc(100% - 9px)"
-                  height="calc(100% - 11px)"
-                  rx="29.5"
-                  stroke="#2C204C"
-                  strokeOpacity="0.8"
-                  shapeRendering="crispEdges"
-                />
-              </g>
-              <defs>
-                <filter
-                  id="filter0_diif_104_1391"
-                  x="0"
-                  y="0"
-                  width="457"
-                  height="409"
-                  filterUnits="userSpaceOnUse"
-                  colorInterpolationFilters="sRGB"
-                >
-                  <feFlood floodOpacity="0" result="BackgroundImageFix" />
-                  <feColorMatrix
-                    in="SourceAlpha"
-                    type="matrix"
-                    values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-                    result="hardAlpha"
-                  />
-                  <feOffset dy="4" />
-                  <feGaussianBlur stdDeviation="2" />
-                  <feComposite in2="hardAlpha" operator="out" />
-                  <feColorMatrix
-                    type="matrix"
-                    values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"
-                  />
-                  <feBlend
-                    mode="normal"
-                    in2="BackgroundImageFix"
-                    result="effect1_dropShadow_104_1391"
-                  />
-                  <feBlend
-                    mode="normal"
-                    in="SourceGraphic"
-                    in2="effect1_dropShadow_104_1391"
-                    result="shape"
-                  />
-                  <feColorMatrix
-                    in="SourceAlpha"
-                    type="matrix"
-                    values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-                    result="hardAlpha"
-                  />
-                  <feOffset dx="-0.5" dy="-0.8" />
-                  <feGaussianBlur stdDeviation="0.25" />
-                  <feComposite
-                    in2="hardAlpha"
-                    operator="arithmetic"
-                    k2="-1"
-                    k3="1"
-                  />
-                  <feColorMatrix
-                    type="matrix"
-                    values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.2 0"
-                  />
-                  <feBlend
-                    mode="screen"
-                    in2="shape"
-                    result="effect2_innerShadow_104_1391"
-                  />
-                  <feColorMatrix
-                    in="SourceAlpha"
-                    type="matrix"
-                    values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-                    result="hardAlpha"
-                  />
-                  <feOffset dx="0.3" dy="0.8" />
-                  <feGaussianBlur stdDeviation="0.25" />
-                  <feComposite
-                    in2="hardAlpha"
-                    operator="arithmetic"
-                    k2="-1"
-                    k3="1"
-                  />
-                  <feColorMatrix
-                    type="matrix"
-                    values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.9 0"
-                  />
-                  <feBlend
-                    mode="screen"
-                    in2="effect2_innerShadow_104_1391"
-                    result="effect3_innerShadow_104_1391"
-                  />
-                  <feGaussianBlur
-                    stdDeviation="0.5"
-                    result="effect4_foregroundBlur_104_1391"
-                  />
-                </filter>
-                <linearGradient
-                  id="paint0_linear_104_1391"
-                  x1="419.424"
-                  y1="6.86509"
-                  x2="57.259"
-                  y2="470.734"
-                  gradientUnits="userSpaceOnUse"
-                >
-                  <stop stopColor="#D78EFF" />
-                  <stop
-                    offset="0.0384615"
-                    stopColor="#B37AF0"
-                    stopOpacity="0.8"
-                  />
-                  <stop
-                    offset="0.336538"
-                    stopColor="#253268"
-                    stopOpacity="0.8"
-                  />
-                  <stop offset="0.721154" stopColor="#290046" />
-                </linearGradient>
-              </defs>
-            </svg>
-          </div>
+        {/* Form Card (Responsive CSS Glassmorphism) */}
+        <div className="relative w-full bg-zinc-900/30 backdrop-blur-md border border-white/10 rounded-[32px] overflow-hidden p-6 sm:p-8 md:p-10 shadow-2xl hover:border-white/20 transition-all duration-500">
+          {/* Card background glowing overlay */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/10 via-indigo-900/5 to-transparent pointer-events-none z-0" />
 
           {/* Form Elements */}
           <form
             onSubmit={handleSubmit}
             noValidate
-            className="relative z-10 flex flex-col gap-8 h-full p-6 md:p-10 pt-12"
+            className="relative z-10 flex flex-col gap-8 h-full"
           >
-            <div className="relative flex flex-col">
+            <div className="relative flex flex-col pt-2">
               <input
                 type="text"
                 name="name"
@@ -338,7 +234,7 @@ export default function ContactSection({
                 onChange={handleChange}
                 onBlur={handleBlur}
                 placeholder="Name"
-                className={`bg-transparent border-b pb-2 text-white placeholder:text-white/90 focus:outline-none transition-colors text-sm md:text-base ${errors.name ? "border-red-400 focus:border-red-400" : "border-white/30 focus:border-white"}`}
+                className={`bg-transparent border-b pb-2 text-white placeholder:text-zinc-500 focus:outline-none transition-all duration-300 text-sm md:text-base ${errors.name ? "border-red-400 focus:border-red-400" : "border-white/20 focus:border-[#b492f4]"}`}
               />
               {errors.name && (
                 <span className="absolute -bottom-5 left-0 text-[10px] text-red-400/90 tracking-wide">
@@ -347,7 +243,7 @@ export default function ContactSection({
               )}
             </div>
 
-            <div className="relative flex flex-col">
+            <div className="relative flex flex-col pt-2">
               <input
                 type="email"
                 name="email"
@@ -355,7 +251,7 @@ export default function ContactSection({
                 onChange={handleChange}
                 onBlur={handleBlur}
                 placeholder="Email"
-                className={`bg-transparent border-b pb-2 text-white placeholder:text-white/90 focus:outline-none transition-colors text-sm md:text-base ${errors.email ? "border-red-400 focus:border-red-400" : "border-white/30 focus:border-white"}`}
+                className={`bg-transparent border-b pb-2 text-white placeholder:text-zinc-500 focus:outline-none transition-all duration-300 text-sm md:text-base ${errors.email ? "border-red-400 focus:border-red-400" : "border-white/20 focus:border-[#b492f4]"}`}
               />
               {errors.email && (
                 <span className="absolute -bottom-5 left-0 text-[10px] text-red-400/90 tracking-wide">
@@ -364,7 +260,7 @@ export default function ContactSection({
               )}
             </div>
 
-            <div className="relative flex flex-col">
+            <div className="relative flex flex-col pt-2">
               <input
                 type="text"
                 name="subject"
@@ -372,7 +268,7 @@ export default function ContactSection({
                 onChange={handleChange}
                 onBlur={handleBlur}
                 placeholder="Subject"
-                className={`bg-transparent border-b pb-2 text-white placeholder:text-white/90 focus:outline-none transition-colors text-sm md:text-base ${errors.subject ? "border-red-400 focus:border-red-400" : "border-white/30 focus:border-white"}`}
+                className={`bg-transparent border-b pb-2 text-white placeholder:text-zinc-500 focus:outline-none transition-all duration-300 text-sm md:text-base ${errors.subject ? "border-red-400 focus:border-red-400" : "border-white/20 focus:border-[#b492f4]"}`}
               />
               {errors.subject && (
                 <span className="absolute -bottom-5 left-0 text-[10px] text-red-400/90 tracking-wide">
@@ -381,15 +277,15 @@ export default function ContactSection({
               )}
             </div>
 
-            <div className="relative flex flex-col mt-2">
+            <div className="relative flex flex-col pt-2">
               <textarea
                 name="message"
                 value={formData.message}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 placeholder="Message"
-                rows={5}
-                className={`bg-transparent border-b pb-2 text-white placeholder:text-white/90 focus:outline-none transition-colors resize-none text-sm md:text-base ${errors.message ? "border-red-400 focus:border-red-400" : "border-white/30 focus:border-white"}`}
+                rows={4}
+                className={`bg-transparent border-b pb-2 text-white placeholder:text-zinc-500 focus:outline-none transition-all duration-300 resize-none text-sm md:text-base ${errors.message ? "border-red-400 focus:border-red-400" : "border-white/20 focus:border-[#b492f4]"}`}
               ></textarea>
               {errors.message && (
                 <span className="absolute -bottom-5 left-0 text-[10px] text-red-400/90 tracking-wide">
@@ -398,18 +294,18 @@ export default function ContactSection({
               )}
             </div>
 
-            <div className="mt-auto pt-2 md:pt-6 flex flex-col items-end gap-3">
-              <Button
+            <div className="pt-4 flex flex-col items-end gap-3">
+              <button
                 type="submit"
-                variant="rainbow"
-                onPointerMove={onButtonPointerMove}
-                iconRight={<Send />}
-                // Disable the button if the form isn't perfectly valid or if it's currently sending
                 disabled={!isFormValid || status === "Sending..."}
-                className="disabled:cursor-not-allowed disabled:opacity-50 w-full md:w-fit py-5 px-10"
+                className="group/btn flex items-center justify-center gap-3 bg-[#b492f4] hover:bg-[#c0a5f9] disabled:bg-zinc-800/80 disabled:text-zinc-600 disabled:opacity-50 text-black px-8 py-4 rounded-full transition-all duration-300 font-bold text-xs tracking-widest uppercase cursor-pointer w-full md:w-auto hover:scale-[1.03] active:scale-95 hover:shadow-[0_0_20px_rgba(180,146,244,0.3)]"
               >
-                {status === "Sending..." ? "SENDING..." : "SUBMIT"}
-              </Button>
+                <span>{status === "Sending..." ? "SENDING..." : "SUBMIT"}</span>
+                <Send
+                  size={14}
+                  className="group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform duration-300"
+                />
+              </button>
 
               {/* Status Message Feedback */}
               {status && status !== "Sending..." && (
@@ -422,7 +318,7 @@ export default function ContactSection({
             </div>
           </form>
         </div>
-      </div>
+      </AnimateOnScroll>
     </section>
   );
 }

@@ -1,5 +1,6 @@
 import ContactSection from "./ContactSection";
 import SocialGallery, { SocialCard } from "./SocialGallery";
+import { DotPattern } from "./DotPattern";
 
 interface SocialSectionProps {
   socialCards?: SocialCard[] | null;
@@ -15,15 +16,20 @@ function SocialSection({
   email,
 }: SocialSectionProps) {
   return (
-    <section className="section-parent py-12 md:py-20 bg-linear-330 from-[#00092E] via-[#442A55] to-[#FFC58E]">
+    <DotPattern
+      className="py-16 md:py-24 border-t border-white/5"
+      baseColor="#322254"
+      glowColor="#b492f4"
+      glowIntensity={1.4}
+    >
       <SocialGallery socialCards={socialCards} />
       <ContactSection
         contactDescription={contactDescription}
         location={location}
         email={email}
       />
-      <div className="h-20" />
-    </section>
+      <div className="h-10" />
+    </DotPattern>
   );
 }
 
