@@ -99,11 +99,18 @@ export const TopoRibbonCanvas: React.FC = () => {
       canvas.style.height = `${h}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      const peak = { x: w * 0.72, y: h * 0.5 };
+      const isMobile = w < 768;
+      const lineCount = isMobile ? 40 : LINE_COUNT;
+      const samples = isMobile ? 300 : SAMPLES;
+      const peak = {
+        x: isMobile ? w * 0.5 : w * 0.72,
+        y: isMobile ? h * 0.45 : h * 0.5,
+      };
+
       // Levels distributed to reach 98% of the summit value (100)
       const levels = Array.from(
-        { length: LINE_COUNT },
-        (_, i) => 2 + Math.pow(i / LINE_COUNT, 1.1) * 96,
+        { length: lineCount },
+        (_, i) => 2 + Math.pow(i / lineCount, 1.1) * 96,
       );
 
       const getField = (x: number, y: number) => {
@@ -120,8 +127,8 @@ export const TopoRibbonCanvas: React.FC = () => {
 
       paths.current = levels.map((lvl, lIdx) => {
         const points = [];
-        for (let i = 0; i < SAMPLES; i++) {
-          const ang = (i / SAMPLES) * Math.PI * 2;
+        for (let i = 0; i < samples; i++) {
+          const ang = (i / samples) * Math.PI * 2;
           let rMin = 0,
             rMax = Math.max(w, h) * 2.5,
             r = 0;
@@ -157,7 +164,18 @@ export const TopoRibbonCanvas: React.FC = () => {
     const move = (e: MouseEvent) => {
       mouse.current = { x: e.clientX, y: e.clientY };
     };
+    const touchMove = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        mouse.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      }
+    };
+    const touchEnd = () => {
+      mouse.current = { x: -1000, y: -1000 };
+    };
+
     window.addEventListener("mousemove", move);
+    window.addEventListener("touchmove", touchMove, { passive: true });
+    window.addEventListener("touchend", touchEnd);
     window.addEventListener("resize", init);
     init();
 
@@ -199,6 +217,8 @@ export const TopoRibbonCanvas: React.FC = () => {
     animate();
     return () => {
       window.removeEventListener("mousemove", move);
+      window.removeEventListener("touchmove", touchMove);
+      window.removeEventListener("touchend", touchEnd);
       window.removeEventListener("resize", init);
       cancelAnimationFrame(raf);
     };

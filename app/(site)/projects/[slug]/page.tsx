@@ -206,7 +206,7 @@ export default async function ProjectSinglePage({ params }: PageProps) {
             {/* Background elements container that defines the bounds of the purple card */}
             <div className="absolute left-1 md:left-3.75 top-1 md:top-2.5 right-1 md:right-6.25 bottom-1 md:bottom-7.5 pointer-events-none overflow-hidden rounded-[24px] md:rounded-[40px]">
               <VantaBackground
-                foreground="#312e81"
+                foreground="#2E28BE"
                 background="#0A0C24"
                 className="absolute inset-0 -z-10"
               />

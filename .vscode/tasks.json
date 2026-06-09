@@ -1,20 +1,6 @@
 {
   "version": "2.0.0",
   "tasks": [
-    {
-      "label": "Launch Gemini CLI",
-      "type": "shell",
-      "command": "gemini",
-      "presentation": {
-        "echo": true,
-        "reveal": "always",
-        "focus": false,
-        "group": "gemini-cli",
-        "panel": "dedicated"
-      },
-      "runOptions": {
-        "runOn": "folderOpen"
-      }
-    }
+
   ]
 }

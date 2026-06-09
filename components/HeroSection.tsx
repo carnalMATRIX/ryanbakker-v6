@@ -11,7 +11,6 @@ interface HeroSectionProps {
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({ data }) => {
-  const creativeLabel = data?.heroCreativeLabel || "DEVELOPER // DESIGNER";
   const description =
     data?.heroDescription ||
     "A BCIS student based in Auckland, NZ. With a focus on human-computer interaction and artificial intelligence, combined with robust software development and an emphasis on effective project management.";
@@ -21,29 +20,49 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ data }) => {
       {/* Background Layer */}
       <TopoRibbonCanvas />
 
-      <div className="bg-linear-to-tr from-slate-900/40 via-indigo-900/10 to-violet-900/10 h-full w-full absolute left-0 top-0 z-5" />
+      <div className="bg-linear-to-tr from-slate-900/40 via-indigo-900/35 md:via-indigo-900/10 to-violet-900/10 h-full w-full absolute left-0 top-0 z-5" />
 
       {/* Content Layer */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col items-start space-y-8 pb-20">
+      <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col items-start space-y-8 pb-20 mt-16 md:mt-0">
         {/* Text Hierarchy */}
         <div>
           <div>
             <p className="text-sm md:text-base font-medium tracking-[0.2em] text-zinc-400 uppercase">
               Hello, I&apos;m
             </p>
-            <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold text-white tracking-tight leading-none uppercase -ml-1.5">
+            <h1 className="text-7xl md:text-8xl lg:text-9xl font-bold text-white tracking-tight leading-16 md:leading-none uppercase -ml-1.5">
               Ryan Beckett
             </h1>
           </div>
-          <div className="inline-block bg-white px-3 md:px-4 py-1 mt-4">
-            <span className="text-black md:text-3xl! font-bold tracking-[0.3em] uppercase">
-              {creativeLabel}
-            </span>
+          <div className="relative mt-4 inline-block">
+            {/* Background Layer: White block with // characters knocked out */}
+            <div className="bg-indigo-300/80 px-1 py-1.5 mix-blend-screen select-none pointer-events-none ">
+              <div className="text-xl md:text-3xl! font-bold uppercase flex flex-col md:flex-row flex-wrap md:items-center gap-x-5 tracking-widest">
+                <p className="flex flex-row items-center gap-5">
+                  <span className="text-black block md:hidden font-black tracking-tighter">
+                    //
+                  </span>
+                  Developer
+                </p>
+                <p className="flex flex-row items-center gap-5">
+                  <span className="text-black font-black tracking-tighter">
+                    //
+                  </span>
+                  UX Designer
+                </p>
+                <p className="flex flex-row items-center gap-5">
+                  <span className="text-black font-black tracking-tighter">
+                    //
+                  </span>
+                  Photographer
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Bio Paragraph */}
-        <p className="max-w-xl text-zinc-300 leading-relaxed font-light">
+        <p className="max-w-xl text-zinc-200 leading-relaxed font-light">
           {description}
         </p>
 
@@ -61,7 +80,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ data }) => {
             </Link>
 
             <Link href="/#continue">
-              <button className="group flex items-center space-x-2 text-white/70 hover:text-white transition-colors duration-300 cursor-pointer">
+              <button className="group flex items-center space-x-2 text-white hover:text-indigo-300 transition-colors duration-300 cursor-pointer">
                 <span className="font-medium text-sm tracking-wider uppercase w-full md:w-auto">
                   Continue Reading
                 </span>

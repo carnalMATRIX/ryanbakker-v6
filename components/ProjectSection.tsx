@@ -47,7 +47,7 @@ function ProjectSection({
   return (
     <section className="section-parent py-16 pb-64! md:pb-16 min-h-screen radial-grey text-neutral-950">
       <div className="section-child w-full h-full max-w-7xl lg:max-w-none lg:px-0 mx-auto mb-10 md:mb-0">
-        <div className="max-w-7xl mx-auto px-4 lg:px-12 w-full">
+        <div className="max-w-7xl mx-auto w-full">
           <h3 className="text-xl font-bold mb-3 uppercase tracking-tight">
             Project Catalogue
           </h3>
@@ -145,7 +145,7 @@ function ProjectSection({
 
               <li className="lg:h-full md:mt-auto lg:mt-0">
                 <Link href="/projects" className="shrink-0 lg:h-full block">
-                  <div className="group relative overflow-hidden bg-[#220B3B] max-h-28 md:max-h-max h-full w-full lg:w-35 flex flex-col items-center lg:justify-between lg:py-12 hover:bg-[#341159] transition-colors duration-300">
+                  <div className="group relative overflow-hidden bg-[#220B3B] max-h-28 md:max-h-screen h-full w-full lg:w-35 flex flex-col items-center lg:justify-between lg:py-12 hover:bg-[#341159] transition-colors duration-300">
                     <div className="flex-1 flex ml-10 lg:ml-0 translate-y-3 lg:translate-y-0 lg:items-center lg:justify-center">
                       <h5 className="lg:rotate-90 text-white text-4xl font-semibold whitespace-nowrap tracking-wide translate-y-6 lg:translate-y-0">
                         View All
