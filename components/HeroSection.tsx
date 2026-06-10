@@ -17,14 +17,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ data }) => {
     "A BCIS student based in Auckland, NZ. With a focus on human-computer interaction and artificial intelligence, combined with robust software development and an emphasis on effective project management.";
 
   return (
-    <section className="relative w-full h-screen overflow-hidden flex flex-col justify-center px-6 md:px-12 lg:px-24">
+    <section className="relative w-full h-screen overflow-hidden flex flex-col justify-center px-4 md:px-12 lg:px-24">
       {/* Background Layer */}
       <TopoRibbonCanvas />
 
       <div className="bg-linear-to-tr from-slate-900/40 via-indigo-900/35 md:via-indigo-900/10 to-violet-900/10 h-full w-full absolute left-0 top-0 z-5" />
 
       {/* Content Layer */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col items-start space-y-8 pb-20 mt-16 md:mt-0">
+      <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col items-start space-y-8 pb-20 mt-16 md:mt-0 pt-20 md:pt-0">
         {/* Text Hierarchy */}
         <div className="w-full">
           <AnimateOnScroll delay={100}>
@@ -32,12 +32,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ data }) => {
               <p className="text-sm md:text-base font-medium tracking-[0.2em] text-zinc-400 uppercase">
                 Hello, I&apos;m
               </p>
-              <h1 className="text-7xl md:text-8xl lg:text-9xl font-bold text-white tracking-tight leading-16 md:leading-none uppercase -ml-1.5">
+              <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold text-white tracking-tight leading-14 md:leading-none uppercase -ml-1.5">
                 Ryan Beckett
               </h1>
             </div>
           </AnimateOnScroll>
-          
+
           <AnimateOnScroll delay={250}>
             <div className="relative mt-4 inline-block">
               {/* Background Layer: White block with // characters knocked out */}
@@ -69,16 +69,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ data }) => {
 
         {/* Bio Paragraph */}
         <AnimateOnScroll delay={400}>
-          <p className="max-w-xl text-zinc-200 leading-relaxed font-light">
+          <p className="max-w-xl text-zinc-200 leading-relaxed font-light text-sm md:text-base">
             {description}
           </p>
         </AnimateOnScroll>
 
         {/* Navigation & Action Bar */}
         <AnimateOnScroll delay={550} className="w-full">
-          <div className="w-full flex flex-col md:flex-row md:items-center justify-between pt-20 space-y-8 md:space-y-0">
+          <div className="w-full flex flex-col md:flex-row md:items-center justify-between pt-8 md:pt-20 space-y-8 md:space-y-0">
             {/* Left Utilities (Actions) */}
-            <div className="flex flex-col md:flex-row gap-8 items-center">
+            <div className="flex flex-col md:flex-row gap-6 md:gap-8 items-center">
               <Link href="/projects" className="w-full md:w-auto">
                 <button className="group flex items-center space-x-3 bg-[#b492f4] hover:bg-[#c0a5f9] text-black px-6 py-3 rounded-full transition-all duration-300 transform hover:scale-105 active:scale-95  cursor-pointer w-full md:w-auto justify-center">
                   <Folder size={18} className="text-black group" />
