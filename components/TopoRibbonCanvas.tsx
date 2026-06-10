@@ -89,22 +89,47 @@ export const TopoRibbonCanvas: React.FC = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d")!;
-    const init = () => {
-      const w = window.innerWidth,
-        h = window.innerHeight,
-        dpr = window.devicePixelRatio || 1;
-      canvas.width = w * dpr;
-      canvas.height = h * dpr;
-      canvas.style.width = `${w}px`;
-      canvas.style.height = `${h}px`;
+
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    let isAnimating = false;
+    let raf: number;
+    let mouseTimeout: NodeJS.Timeout | null = null;
+    let isMouseActive = true;
+    let isIntersecting = true;
+    let isTabVisible = true;
+
+    function wake() {
+      if (!isAnimating && isIntersecting && isTabVisible) {
+        isAnimating = true;
+        animate();
+      }
+    }
+
+    function stopAnimating() {
+      if (isAnimating) {
+        isAnimating = false;
+        cancelAnimationFrame(raf);
+      }
+    }
+
+    function init() {
+      if (!canvas) return;
+      width = window.innerWidth;
+      height = window.innerHeight;
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      const isMobile = w < 768;
+      const isMobile = width < 768;
       const lineCount = isMobile ? 40 : LINE_COUNT;
       const samples = isMobile ? 300 : SAMPLES;
       const peak = {
-        x: isMobile ? w * 0.5 : w * 0.72,
-        y: isMobile ? h * 0.45 : h * 0.5,
+        x: isMobile ? width * 0.5 : width * 0.72,
+        y: isMobile ? height * 0.45 : height * 0.5,
       };
 
       // Levels distributed to reach 98% of the summit value (100)
@@ -125,12 +150,13 @@ export const TopoRibbonCanvas: React.FC = () => {
         return 5000 / (dist + 50); // Normalized 0-100 potential
       };
 
+      const maxDim = Math.max(width, height) * 2.5;
       paths.current = levels.map((lvl, lIdx) => {
         const points = [];
         for (let i = 0; i < samples; i++) {
           const ang = (i / samples) * Math.PI * 2;
           let rMin = 0,
-            rMax = Math.max(w, h) * 2.5,
+            rMax = maxDim,
             r = 0;
           for (let j = 0; j < 14; j++) {
             r = (rMin + rMax) / 2;
@@ -158,69 +184,178 @@ export const TopoRibbonCanvas: React.FC = () => {
             gy: dy / mag,
           });
         }
-        return { points, isMajor: lIdx % 5 === 0, phase: lIdx * 0.35 };
+        const isMajor = lIdx % 5 === 0;
+        return {
+          points,
+          isMajor,
+          phase: lIdx * 0.35,
+          strokeStyle: isMajor ? "rgba(180, 146, 244, 0.65)" : "rgba(180, 146, 244, 0.3)",
+          lineWidth: isMajor ? 1.4 : 0.7,
+        };
       });
-    };
-    const move = (e: MouseEvent) => {
-      mouse.current = { x: e.clientX, y: e.clientY };
-    };
-    const touchMove = (e: TouchEvent) => {
+
+      // Wake up the animation on resize so it adapts and redraws
+      isMouseActive = true;
+      wake();
+      if (mouseTimeout) clearTimeout(mouseTimeout);
+      mouseTimeout = setTimeout(() => {
+        isMouseActive = false;
+      }, 3000);
+    }
+
+    function handleMouseMove(x: number, y: number) {
+      mouse.current = { x, y };
+      isMouseActive = true;
+      wake();
+
+      if (mouseTimeout) clearTimeout(mouseTimeout);
+      mouseTimeout = setTimeout(() => {
+        isMouseActive = false;
+      }, 2000);
+    }
+
+    function move(e: MouseEvent) {
+      handleMouseMove(e.clientX, e.clientY);
+    }
+    function touchMove(e: TouchEvent) {
       if (e.touches.length > 0) {
-        mouse.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        handleMouseMove(e.touches[0].clientX, e.touches[0].clientY);
       }
-    };
-    const touchEnd = () => {
+    }
+    function touchEnd() {
       mouse.current = { x: -1000, y: -1000 };
-    };
+      isMouseActive = false;
+      if (mouseTimeout) clearTimeout(mouseTimeout);
+    }
+    function mouseLeave() {
+      mouse.current = { x: -1000, y: -1000 };
+      isMouseActive = false;
+      if (mouseTimeout) clearTimeout(mouseTimeout);
+    }
 
     window.addEventListener("mousemove", move);
     window.addEventListener("touchmove", touchMove, { passive: true });
     window.addEventListener("touchend", touchEnd);
+    window.addEventListener("mouseleave", mouseLeave);
     window.addEventListener("resize", init);
     init();
 
-    let raf: number;
-    const animate = () => {
-      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-      time.current++;
-      paths.current.forEach((p) => {
-        ctx.strokeStyle = `rgba(180, 146, 244, ${p.isMajor ? 0.65 : 0.3})`;
-        ctx.lineWidth = p.isMajor ? 1.4 : 0.7;
+    function animate() {
+      if (!isAnimating) return;
+
+      if (isMouseActive) {
+        time.current++;
+      }
+
+      ctx.clearRect(0, 0, width, height);
+
+      const mouseX = mouse.current.x;
+      const mouseY = mouse.current.y;
+      const t = time.current;
+      const pathList = paths.current;
+      const pathCount = pathList.length;
+
+      let maxVelocitySq = 0;
+
+      for (let pIdx = 0; pIdx < pathCount; pIdx++) {
+        const p = pathList[pIdx];
+        ctx.strokeStyle = p.strokeStyle;
+        ctx.lineWidth = p.lineWidth;
         ctx.beginPath();
-        p.points.forEach((pt: any, i: number) => {
-          const b =
-            Math.sin(time.current * BREATH_SPEED + p.phase) * BREATH_AMP;
-          const tx = pt.ox + pt.gx * b,
-            ty = pt.oy + pt.gy * b;
-          const dx = pt.x - mouse.current.x,
-            dy = pt.y - mouse.current.y,
-            d = Math.sqrt(dx * dx + dy * dy);
-          if (d < MOUSE_RADIUS) {
-            const f = ((MOUSE_RADIUS - d) / MOUSE_RADIUS) * 0.4;
-            pt.vx += (dx / d) * f;
-            pt.vy += (dy / d) * f;
+
+        const b = Math.sin(t * BREATH_SPEED + p.phase) * BREATH_AMP;
+        const points = p.points;
+        const ptCount = points.length;
+
+        for (let i = 0; i < ptCount; i++) {
+          const pt = points[i];
+          const tx = pt.ox + pt.gx * b;
+          const ty = pt.oy + pt.gy * b;
+
+          const dx = pt.x - mouseX;
+          const dy = pt.y - mouseY;
+          const dSq = dx * dx + dy * dy;
+
+          if (dSq < 22500) {
+            const d = Math.sqrt(dSq);
+            if (d > 0) {
+              const f = (150 - d) * 0.0026666666666666666;
+              pt.vx += (dx / d) * f;
+              pt.vy += (dy / d) * f;
+            }
           }
+
           pt.vx += (tx - pt.x) * STIFFNESS;
           pt.vy += (ty - pt.y) * STIFFNESS;
           pt.vx *= DAMPING;
           pt.vy *= DAMPING;
           pt.x += pt.vx;
           pt.y += pt.vy;
-          if (i === 0) ctx.moveTo(pt.x, pt.y);
-          else ctx.lineTo(pt.x, pt.y);
-        });
+
+          const vSq = pt.vx * pt.vx + pt.vy * pt.vy;
+          if (vSq > maxVelocitySq) {
+            maxVelocitySq = vSq;
+          }
+
+          if (i === 0) {
+            ctx.moveTo(pt.x, pt.y);
+          } else {
+            ctx.lineTo(pt.x, pt.y);
+          }
+        }
         ctx.closePath();
         ctx.stroke();
-      });
+      }
+
+      // If the cursor is idle and physics has settled, pause the animation
+      if (!isMouseActive && maxVelocitySq < 0.0001) {
+        isAnimating = false;
+        return;
+      }
+
       raf = requestAnimationFrame(animate);
-    };
-    animate();
+    }
+
+    function updatePlayState() {
+      if (isIntersecting && isTabVisible) {
+        wake();
+      } else {
+        stopAnimating();
+      }
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isIntersecting = entry.isIntersecting;
+        updatePlayState();
+      },
+      { threshold: 0 }
+    );
+    observer.observe(canvas);
+
+    function handleVisibilityChange() {
+      isTabVisible = !document.hidden;
+      updatePlayState();
+    }
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    // Initial play state setup (runs on page load for 4 seconds, then settles)
+    isMouseActive = true;
+    mouseTimeout = setTimeout(() => {
+      isMouseActive = false;
+    }, 4000);
+    updatePlayState();
+
     return () => {
       window.removeEventListener("mousemove", move);
       window.removeEventListener("touchmove", touchMove);
       window.removeEventListener("touchend", touchEnd);
+      window.removeEventListener("mouseleave", mouseLeave);
       window.removeEventListener("resize", init);
-      cancelAnimationFrame(raf);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      observer.disconnect();
+      stopAnimating();
+      if (mouseTimeout) clearTimeout(mouseTimeout);
     };
   }, []);
 
